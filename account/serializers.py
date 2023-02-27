@@ -10,7 +10,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
       password2 = serializers.CharField(style={'input_type':'password'},write_only =True)
       class Meta:
         model = User
-        fields = ['email','name','password','password2','tc'] 
+        fields = ['email','name','password','password2','tc','date_of_birth','Dfirst','Cfirst'] 
         extra_Kwargs={
             'password':{'write_only':True}
         }
@@ -123,5 +123,5 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
   # email = serializers.EmailField(max_length= 255)
   class Meta:
     model = User
-    fields = ['email','name']
+    fields = ['email','name','Dfirst','Cfirst','date_of_birth']
 

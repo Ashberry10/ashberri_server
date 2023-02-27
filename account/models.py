@@ -6,7 +6,7 @@ from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 #Custon User Manager
 
 class UserManager(BaseUserManager):
-    def create_user(self, email,name,tc, password=None,password2=None):
+    def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
         """
         Creates and saves a User with the given email,name,tc 
         and password.
@@ -16,7 +16,11 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            # date_of_birth=date_of_birth,
+            date_of_birth=date_of_birth,
+            # Dsecond=Dsecond,
+            # Csecond=Csecond,
+            Dfirst=Dfirst,
+            Cfirst=Cfirst,
             name=name,
             tc = tc,
         )
@@ -25,7 +29,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, tc, password=None):
+    def create_superuser(self, email, name, tc,date_of_birth,Dfirst,Cfirst, password=None):
         """
         Creates and saves a User with the given email,name,tc 
         and password.
@@ -34,8 +38,10 @@ class UserManager(BaseUserManager):
             email,
             password=password,
             name= name,
+            Dfirst = Dfirst,
+            Cfirst=Cfirst,
             tc=tc,
-            # date_of_birth=date_of_birth,
+            date_of_birth=date_of_birth,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -50,7 +56,10 @@ class User(AbstractBaseUser):
     )
     name= models.CharField(max_length=200)
     tc = models.BooleanField()
-    # date_of_birth = models.DateField()
+    Dfirst = models.IntegerField(default=0)
+    Cfirst = models.IntegerField(default=0)
+
+    date_of_birth = models.DateField(null=True, )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

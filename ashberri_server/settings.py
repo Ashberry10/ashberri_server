@@ -26,7 +26,7 @@ SECRET_KEY = 'h!b-!1u#894v=o0!g5wedgs^#bi8*jmr*h^jrymc70w(!usrjd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -193,11 +193,23 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
+
+
 PASSWORD_RESET_TIMEOUT=900          # 900 Sec = 15 Min
 
-CORS_ALLOWED_ORIGINS = [
-    "https://example.com",
-    "https://sub.example.com",
-    "http://localhost:8080",
-    "http://127.0.0.1:9000",
+
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    "http://127.0.0.1:3000"
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    "http://127.0.0.1:3000"
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+CORS_ALLOW_ALL_ORIGINS = True
