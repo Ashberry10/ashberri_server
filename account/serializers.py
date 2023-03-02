@@ -7,23 +7,25 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from account.utils import Util
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-      password2 = serializers.CharField(style={'input_type':'password'},write_only =True)
+      # password2 = serializers.CharField(style={'input_type':'password'},write_only =True)
       class Meta:
         model = User
-        fields = ['email','name','password','password2','tc','date_of_birth','Dfirst','Cfirst'] 
-        extra_Kwargs={
-            'password':{'write_only':True}
-        }
+        # fields = ['email','name','password','password2','tc','date_of_birth','Dfirst','Cfirst'] 
+        fields = ['email','name','password','Dfirst','Cfirst'] 
+
+        # extra_Kwargs={
+        #     'password':{'write_only':True}
+        # }
         
         #Validating Password and Confirm Password while Registration
-      def validate(self,attrs):
-            password = attrs.get('password')
-            password2 = attrs.get('password2')
-            if password != password2: 
-                raise serializers.ValidationError("Password and Confirm Password doesn't match")
+      # def validate(self,attrs):
+      #       password = attrs.get('password')
+            # password2 = attrs.get('password2')
+            # if password != password2: 
+            #     raise serializers.ValidationError("Password and Confirm Password doesn't match")
                 
 
-            return attrs
+            # return attrs
 
       def create(self,validate_data):
             return User.objects.create_user(**validate_data)
@@ -123,5 +125,5 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
   # email = serializers.EmailField(max_length= 255)
   class Meta:
     model = User
-    fields = ['email','name','Dfirst','Cfirst','date_of_birth']
+    fields = ['email','name','Dfirst','Cfirst']
 

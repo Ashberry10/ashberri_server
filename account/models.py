@@ -6,7 +6,9 @@ from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 #Custon User Manager
 
 class UserManager(BaseUserManager):
-    def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
+    # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
+    def create_user(self, email,name,Dfirst,Cfirst,password=None):
+
         """
         Creates and saves a User with the given email,name,tc 
         and password.
@@ -16,13 +18,13 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            date_of_birth=date_of_birth,
+            # date_of_birth=date_of_birth,
             # Dsecond=Dsecond,
             # Csecond=Csecond,
             Dfirst=Dfirst,
             Cfirst=Cfirst,
             name=name,
-            tc = tc,
+            # tc = tc,
         )
 
         user.set_password(password)
@@ -55,11 +57,11 @@ class User(AbstractBaseUser):
         unique=True,
     )
     name= models.CharField(max_length=200)
-    tc = models.BooleanField()
+    # tc = models.BooleanField()
     Dfirst = models.IntegerField(default=0)
     Cfirst = models.IntegerField(default=0)
 
-    date_of_birth = models.DateField(null=True, )
+    # date_of_birth = models.DateField(null=True, )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
