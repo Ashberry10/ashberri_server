@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from account.serializers import UserRegistrationSerializer,UserLoginSeriailzer,GetallUserSeriailzer,UserProfileSerializer,UserChangePasswordSeriailzer,SendPasswordResetEmailSerializer, UserPasswordResetSerializer
+from account.serializers import UserRegistrationSerializer,UserLoginSeriailzer,GetallUserSeriailzer
 from django.contrib.auth import authenticate
 from .models import UserManager,User
 from rest_framework.renderers import JSONRenderer
@@ -47,12 +47,12 @@ class UserLoginView(APIView):
 
 
 
-class UserProfileView(APIView):
-  renderer_classes = [UserRenderer]
-  permission_classes = [IsAuthenticated]
-  def get(self, request, format=None):
-    serializer = UserProfileSerializer(request.user)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+# class UserProfileView(APIView):
+#   renderer_classes = [UserRenderer]
+#   permission_classes = [IsAuthenticated]
+#   def get(self, request, format=None):
+#     serializer = UserProfileSerializer(request.user)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # class UserChangePassword(APIView):

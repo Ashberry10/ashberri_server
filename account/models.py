@@ -7,7 +7,7 @@ from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 
 class UserManager(BaseUserManager):
     # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,Dfirst,Cfirst,password=None):
+    def create_user(self, email,name,D_first,C_first,password=None):
 
         """
         Creates and saves a User with the given email,name,tc 
@@ -20,9 +20,9 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             # date_of_birth=date_of_birth,
             # Dsecond=Dsecond,
-            # Csecond=Csecond,
-            Dfirst=Dfirst,
-            Cfirst=Cfirst,
+            C_first=C_first,
+            D_first=D_first,
+            # C_second=C_second,
             name=name,
             # tc = tc,
         )
@@ -31,7 +31,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, tc,date_of_birth,Dfirst,Cfirst, password=None):
+    def create_superuser(self, email, name,password=None):
         """
         Creates and saves a User with the given email,name,tc 
         and password.
@@ -40,10 +40,8 @@ class UserManager(BaseUserManager):
             email,
             password=password,
             name= name,
-            Dfirst = Dfirst,
-            Cfirst=Cfirst,
-            tc=tc,
-            date_of_birth=date_of_birth,
+        
+          
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -58,19 +56,18 @@ class User(AbstractBaseUser):
     )
     name= models.CharField(max_length=200)
     # tc = models.BooleanField()
-    Dfirst = models.IntegerField(default=0)
-    Cfirst = models.IntegerField(default=0)
+    D_first= models.IntegerField(default=True)
+    C_first= models.IntegerField(default=True)
 
     # date_of_birth = models.DateField(null=True, )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-      
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name','tc']
+    REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.email
