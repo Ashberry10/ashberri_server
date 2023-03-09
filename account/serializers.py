@@ -40,10 +40,10 @@ class UserLoginSeriailzer(serializers.ModelSerializer):
 
 
 
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#      model = User
-#      fields = ['id', 'email', 'name']
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+     model = User
+     fields = ['id', 'email', 'name']
 
 
 # class UserChangePasswordSeriailzer(serializers.Serializer):
@@ -127,3 +127,10 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
     model = User
     fields = ['email','name','D_first','C_first']
 
+
+
+
+class GetallUserWithCompSeriailzer(serializers.ModelSerializer):
+   class Meta:
+    model = User
+    fields = ['name','Dfirst','C_first','comp']
