@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from account.serializers import UserRegistrationSerializer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer
+from account.serializers import UserRegistrationSerializer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer,UserModelSerializer
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.http import JsonResponse
@@ -62,6 +62,7 @@ class UserRegistrationView(APIView):
 
 class UserLoginView(APIView):
     renderer_classes = [UserRenderer]
+
     def post(self,request,format=None):
         serializer = UserLoginSeriailzer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -85,11 +86,8 @@ class UserLoginView(APIView):
 
 # AB model api
 class ModelapiView(APIView):
-    
-    # def get(self, request):
-
-    #     return JsonResponse({"key": "Hello World"})
-		
+    # renderer_classes = [UserRenderer]
+	# permission_classes = [IsAuthenticated]
     def post(self, request):
 	
         # D_first = request.GET.get['D_first']
@@ -114,8 +112,9 @@ class ModelapiView(APIView):
         # D_second = request.data['D_second'] 
 
 
-
-    
+        # stu = User.objects.all()
+        # serializer =  UserModelSerializer(stu,many=True)
+        # json_data = JSONRenderer().render(serializer.data)
         #  request.GET.get('name')
         # print(os.getcwd())
         # print("Hi")

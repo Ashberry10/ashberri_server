@@ -11,7 +11,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
       class Meta:
         model = User
         # fields = ['email','name','password','password2','tc','date_of_birth','Dfirst','Cfirst'] 
-        fields = ['email','name','password','D_first','C_first'] 
+        fields = ['email','name','password','D_second','C_second'] 
 
         # extra_Kwargs={
         #     'password':{'write_only':True}
@@ -43,7 +43,15 @@ class UserLoginSeriailzer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
      model = User
-     fields = ['id', 'email', 'name']
+     fields = ['id', 'email', 'name','D_second','C_second']
+
+
+
+class UserModelSerializer(serializers.ModelSerializer):
+    class Meta:
+     model = User
+     fields = ['id', 'email', 'name','D_second','C_second']
+
 
 
 # class UserChangePasswordSeriailzer(serializers.Serializer):
@@ -125,7 +133,7 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
   # email = serializers.EmailField(max_length= 255)
   class Meta:
     model = User
-    fields = ['email','name','D_first','C_first']
+    fields = ['email','name','D_second','C_second']
 
 
 
@@ -133,4 +141,4 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
 class GetallUserWithCompSeriailzer(serializers.ModelSerializer):
    class Meta:
     model = User
-    fields = ['name','Dfirst','C_first','comp']
+    fields = ['name','D_first','C_first','comp']
