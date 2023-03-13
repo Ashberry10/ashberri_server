@@ -191,74 +191,59 @@ class ModelapiView(APIView):
         LogedInserializer = UserProfileSerializer(request.user)
         LogedInUserName = LogedInserializer.data['name']
         LogedInUseremail = LogedInserializer.data['email']
-        LogedInUserCfirst = LogedInserializer.data['C_second']
-        LogedInUserDfirst = LogedInserializer.data['D_second']
+        C_first = LogedInserializer.data['C_second']
+        D_first = LogedInserializer.data['D_second']
 
-        print(LogedInUserName)
-        print(LogedInUseremail)
-        print(LogedInUserCfirst)
-        print(LogedInUserDfirst)
+        # print(LogedInUserName)
+        # print(LogedInUseremail)
+        # print(LogedInUserCfirst)
+        # print(LogedInUserDfirst)
 
         # 2 list of user from the database
-        listofuser = User.objects.values('D_second','C_second')
-        listofuserSerializer = GetallUserDCsecondSeriailzer(listofuser,many=True)
-
-        #print(listofuserSerializer.data)      
-    # obj = [OrderedDict([('email', 'admin@example.com'), ('name', 'Admin kumar'), ('D_second', 0), ('C_second', 0)]), 
-    #    OrderedDict([('email', 'pc@gmail.com'), ('name', 'pc'), ('D_second', 0), ('C_second', 0)]),
-    #    OrderedDict([('email', 'pc23@gmail.com'), ('name', 'pc23'), ('D_second', 0), ('C_second', 0)]),
-    #    OrderedDict([('email', 'sdfsd@gmail.co'),('name', 'dsfs'), ('D_second', 0), ('C_second', 0)]),
-    #    OrderedDict([('email', 'ram3@gmail.com'), ('name', 'ram'), ('D_second', 0), ('C_second', 0)]),
-    #    OrderedDict([('email', 'rasddm23@gmail.com'), ('name', 'sdf'), ('D_second', 0), ('C_second', 0)]),
-    #    OrderedDict([('email', 'sam23@gmail.com'), ('name', 'sam'), ('D_second', 4), ('C_second', 3)])]
-      
-        # obdf =  {"sdf":23,"sdfd":23}
-        # print (obdf.keys())
+        listofuser = User.objects.all()
+        
+        # listofuser = User.objects.values('D_second','C_second')
+        # listofuserSerializer = GetallUserDCsecondSeriailzer(listofuser,many=True)
+        listofuserSerializer = GetallUserSeriailzer(listofuser,many=True)
+    
         json_data = JSONRenderer().render(listofuserSerializer.data)
-        # print(json_data)
-
-        # print(type(json_data))
-
-
         res_dict = json.loads(json_data)
         # printing type and list
         # print(type(res_dict))
-        print(res_dict)
-
-        
-
-        # b'[{"email":"admin@example.com","name":"Admin kumar","D_second":0,"C_second":0},
-        # {"email":"pc@gmail.com","name":"pc","D_second":0,"C_second":0},
-        # {"email":"pc23@gmail.com","name":"pc23","D_second":0,"C_second":0},
-        # {"email":"sdfsd@gmail.co","name":"dsfs","D_second":0,"C_second":0},
-        # {"email":"ram3@gmail.com","name":"ram","D_second":0,"C_second":0},
-        # {"email":"rasddm23@gmail.com","name":"sdf","D_second":0,"C_second":0},
-        # {"email":"sam23@gmail.com","name":"sam","D_second":4,"C_second":3}]'
-      
-        # updated and converted to list datatype
-        #print(str(res_dict))
-        #[{'email': 'admin@example.com', 'name': 'Admin kumar', 'D_second': 0, 'C_second': 0}, {'email': 'pc@gmail.com', 'name': 'pc', 'D_second': 0, 'C_second': 0}, {'email': 'pc23@gmail.com', 'name': 'pc23', 'D_second': 0, 'C_second': 0}, {'email': 'sdfsd@gmail.co', 'name': 'dsfs', 'D_second': 0, 'C_second': 0}, {'email': 'ram3@gmail.com', 'name': 'ram', 'D_second': 0, 'C_second': 0}, {'email': 'rasddm23@gmail.com', 'name': 'sdf', 'D_second': 0, 'C_second': 0}, {'email': 'sam23@gmail.com', 'name': 'sam', 'D_second': 4, 'C_second': 3}]
-       
         #3
         #print the individual element of json_data ?
         print("individual elements")
-   
+        first = res_dict[0]
+        
+        D_second = first['D_second']
+        C_second = first['C_second']
+        print(D_second)
+        print(C_second)
+
+        model = joblib.load(os.path.join('./ABmodel.joblib'))
+        prediction = model.predict([[D_first, C_first, C_second, D_second]])
+        # prediction = model.predict([[1, 1, 1, 1]])
+
+        if (prediction == 0) :
+            predicted_class = 'Not friend'
+        elif prediction[0] == 3:
+             predicted_class = '* * *'
+        elif prediction[0] == 4:
+             predicted_class = '* * * *'    
+        elif prediction[0] == 5:
+             predicted_class = '* * * * *' 
+
+
 
         print("key and values of D and C")
    
-        # print(str(sdfsd.get("email")))
-        # print(str(res_dict[1].D_second))
-        # for user in res_dict:
-        #     print(user)
-        #print(res_dict)
-        #map method 
-        # len = map(json_data,["name"])
-        # print(len)
 
-        
-        
+        return JsonResponse({
+            'Prediction': predicted_class
+         })
 
-        return Response(status=status.HTTP_200_OK)
+
+        # return Response(status=status.HTTP_200_OK)
 
     
     
