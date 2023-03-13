@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from account.serializers import UserRegistrationSerializer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer,UserModelSerializer
+from account.serializers import UserRegistrationSerializer,GetallUserDCsecondSeriailzer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer,UserModelSerializer,GetallUserWithCompSeriailzer
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.http import JsonResponse
@@ -12,11 +12,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from account.renderers import UserRenderer
 from rest_framework.permissions import IsAuthenticated
 import jwt, datetime
+# from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import render
 from django.template import Context, RequestContext
 import joblib
 import requests
+# from rest_framework import generics
+import json
 import os
+# from rest_framework import filters
 model = joblib.load('./ABmodel.joblib')
 
 
@@ -80,63 +84,41 @@ class UserLoginView(APIView):
 
 
 
+# # AB model api
+# class ModelapiView(APIView):
+#     renderer_classes = [UserRenderer]
+#     permission_classes = [IsAuthenticated]        
+#     def get(self, request, format=None):
+#         serializer = UserProfileSerializer(request.user)
+#         # D_first = request.data['D_first']
+#         # C_first = request.data['C_first'] 
+#         # C_second = request.data['C_second'] 
+#         # D_second = request.data['D_second'] 
+#        # model = joblib.load(os.path.join('./ABmodel.joblib'))
+#         # p rediction = model.predict([[D_first, C_first, C_second, D_second]])
+#         # prediction = model.predict([[1, 1, 1, 1]])
+
+#         # if (prediction == 0) :
+#         #     predicted_class = 'Not friend'
+#         # elif prediction[0] == 3:
+#         #      predicted_class = '* * *'
+#         # elif prediction[0] == 4:
+#         #      predicted_class = '* * * *'    
+#         # elif prediction[0] == 5:
+#         #      predicted_class = '* * * * *' 
+#         return Response("dssdf",serializer.data)
+           
+class  UserProfileView(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]        
+    def get(self, request, format=None):
+        serializer = UserProfileSerializer(request.user)
+
+        return Response(serializer.data)
 
 
 
 
-# AB model api
-class ModelapiView(APIView):
-    # renderer_classes = [UserRenderer]
-	# permission_classes = [IsAuthenticated]
-    def post(self, request):
-	
-        # D_first = request.GET.get['D_first']
-        # C_first = request.GET.get['C_first'] 
-        # C_second = request.GET.get['C_second'] 
-        # D_second = request.GET.get['D_second'] 
-
-        
-        
-        # By passing parameter on url or params
-        # D_first = 9
-        D_first = request.GET.get('D_first')
-        C_first = request.GET.get('C_first') 
-        C_second = request.GET.get('C_second') 
-        D_second = request.GET.get('D_second') 
-        # r = requests.get('http://127.0.0.1:8000/api/user/getallusers/')
-
-        # without  passing parameter on url
-        # D_first = request.data['D_first']
-        # C_first = request.data['C_first'] 
-        # C_second = request.data['C_second'] 
-        # D_second = request.data['D_second'] 
-
-
-        # stu = User.objects.all()
-        # serializer =  UserModelSerializer(stu,many=True)
-        # json_data = JSONRenderer().render(serializer.data)
-        #  request.GET.get('name')
-        # print(os.getcwd())
-        # print("Hi")
-        model = joblib.load(os.path.join('./ABmodel.joblib'))
-        prediction = model.predict([[D_first, C_first, C_second, D_second]])
-        if (prediction == 0) :
-            predicted_class = 'Not friend'
-        elif prediction[0] == 3:
-             predicted_class = '* * *'
-        elif prediction[0] == 4:
-             predicted_class = '* * * *'    
-        elif prediction[0] == 5:
-             predicted_class = '* * * * *' 
-        
-        
-        # users = r.json()
-        # print(r)
-             
-             
-        return JsonResponse({
-            'Prediction': predicted_class
-        })
 
 
 
@@ -199,13 +181,91 @@ class band_listing(APIView):
 
 
 
-class UserProfileView(APIView):
+class ModelapiView(APIView):
     renderer_classes = [UserRenderer]
     permission_classes = [IsAuthenticated]
+    
     def get(self, request, format=None):
-        serializer = UserProfileSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
+        # 1 geting the data from the loged in user
+        LogedInserializer = UserProfileSerializer(request.user)
+        LogedInUserName = LogedInserializer.data['name']
+        LogedInUseremail = LogedInserializer.data['email']
+        LogedInUserCfirst = LogedInserializer.data['C_second']
+        LogedInUserDfirst = LogedInserializer.data['D_second']
+
+        print(LogedInUserName)
+        print(LogedInUseremail)
+        print(LogedInUserCfirst)
+        print(LogedInUserDfirst)
+
+        # 2 list of user from the database
+        listofuser = User.objects.values('D_second','C_second')
+        listofuserSerializer = GetallUserDCsecondSeriailzer(listofuser,many=True)
+
+        #print(listofuserSerializer.data)      
+    # obj = [OrderedDict([('email', 'admin@example.com'), ('name', 'Admin kumar'), ('D_second', 0), ('C_second', 0)]), 
+    #    OrderedDict([('email', 'pc@gmail.com'), ('name', 'pc'), ('D_second', 0), ('C_second', 0)]),
+    #    OrderedDict([('email', 'pc23@gmail.com'), ('name', 'pc23'), ('D_second', 0), ('C_second', 0)]),
+    #    OrderedDict([('email', 'sdfsd@gmail.co'),('name', 'dsfs'), ('D_second', 0), ('C_second', 0)]),
+    #    OrderedDict([('email', 'ram3@gmail.com'), ('name', 'ram'), ('D_second', 0), ('C_second', 0)]),
+    #    OrderedDict([('email', 'rasddm23@gmail.com'), ('name', 'sdf'), ('D_second', 0), ('C_second', 0)]),
+    #    OrderedDict([('email', 'sam23@gmail.com'), ('name', 'sam'), ('D_second', 4), ('C_second', 3)])]
+      
+        # obdf =  {"sdf":23,"sdfd":23}
+        # print (obdf.keys())
+        json_data = JSONRenderer().render(listofuserSerializer.data)
+        # print(json_data)
+
+        # print(type(json_data))
+
+
+        res_dict = json.loads(json_data)
+        # printing type and list
+        # print(type(res_dict))
+        print(res_dict)
+
+        
+
+        # b'[{"email":"admin@example.com","name":"Admin kumar","D_second":0,"C_second":0},
+        # {"email":"pc@gmail.com","name":"pc","D_second":0,"C_second":0},
+        # {"email":"pc23@gmail.com","name":"pc23","D_second":0,"C_second":0},
+        # {"email":"sdfsd@gmail.co","name":"dsfs","D_second":0,"C_second":0},
+        # {"email":"ram3@gmail.com","name":"ram","D_second":0,"C_second":0},
+        # {"email":"rasddm23@gmail.com","name":"sdf","D_second":0,"C_second":0},
+        # {"email":"sam23@gmail.com","name":"sam","D_second":4,"C_second":3}]'
+      
+        # updated and converted to list datatype
+        #print(str(res_dict))
+        #[{'email': 'admin@example.com', 'name': 'Admin kumar', 'D_second': 0, 'C_second': 0}, {'email': 'pc@gmail.com', 'name': 'pc', 'D_second': 0, 'C_second': 0}, {'email': 'pc23@gmail.com', 'name': 'pc23', 'D_second': 0, 'C_second': 0}, {'email': 'sdfsd@gmail.co', 'name': 'dsfs', 'D_second': 0, 'C_second': 0}, {'email': 'ram3@gmail.com', 'name': 'ram', 'D_second': 0, 'C_second': 0}, {'email': 'rasddm23@gmail.com', 'name': 'sdf', 'D_second': 0, 'C_second': 0}, {'email': 'sam23@gmail.com', 'name': 'sam', 'D_second': 4, 'C_second': 3}]
+       
+        #3
+        #print the individual element of json_data ?
+        print("individual elements")
+   
+
+        print("key and values of D and C")
+   
+        # print(str(sdfsd.get("email")))
+        # print(str(res_dict[1].D_second))
+        # for user in res_dict:
+        #     print(user)
+        #print(res_dict)
+        #map method 
+        # len = map(json_data,["name"])
+        # print(len)
+
+        
+        
+
+        return Response(status=status.HTTP_200_OK)
+
+    
+    
+
+
+    
+    
     
 
 
@@ -246,7 +306,7 @@ class UserProfileView(APIView):
 
 
 
-#get all User
+
 
 class AllUser(APIView): 
     def get(self, request, *args,**kwargs):
@@ -254,9 +314,6 @@ class AllUser(APIView):
       serializer = GetallUserSeriailzer(stu,many=True)
       json_data = JSONRenderer().render(serializer.data)
       return HttpResponse(json_data,content_type ='application/json')
-
-
-
 
 
 

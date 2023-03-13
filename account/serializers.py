@@ -136,9 +136,13 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
     fields = ['email','name','D_second','C_second']
 
 
-
+class GetallUserDCsecondSeriailzer(serializers.ModelSerializer):
+      # email = serializers.EmailField(max_length= 255)
+  class Meta:
+    model = User
+    fields = ['D_second','C_second']
 
 class GetallUserWithCompSeriailzer(serializers.ModelSerializer):
    class Meta:
     model = User
-    fields = ['name','D_first','C_first','comp']
+    fields = ['name','id',]

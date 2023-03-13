@@ -60,6 +60,7 @@ class User(AbstractBaseUser):
     C_first= models.IntegerField(default=0)
     C_second = models.IntegerField(default=0)
     D_second = models.IntegerField(default=0)
+    # compatibility = models.IntegerField(default=0)
     # date_of_birth = models.DateField(null=True, )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
