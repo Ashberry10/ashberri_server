@@ -177,6 +177,11 @@ class band_listing(APIView):
 
       
 
+# Note:- DCsecond for login user and  all the user 
+# but in function we are making CDfirst for login and  
+# CDsecond for other user except loged in one ,in such  
+# a way that we can make successfull pridiction
+
 
 
 
@@ -194,56 +199,96 @@ class ModelapiView(APIView):
         C_first = LogedInserializer.data['C_second']
         D_first = LogedInserializer.data['D_second']
 
-        # print(LogedInUserName)
-        # print(LogedInUseremail)
-        # print(LogedInUserCfirst)
-        # print(LogedInUserDfirst)
-
         # 2 list of user from the database
         listofuser = User.objects.all()
-        
-        # listofuser = User.objects.values('D_second','C_second')
-        # listofuserSerializer = GetallUserDCsecondSeriailzer(listofuser,many=True)
+        # listofuserSerializer = GetallUserDCsecondSeriailzer(listofuser,many=True)     # listofuser = User.objects.values('D_second','C_second')
         listofuserSerializer = GetallUserSeriailzer(listofuser,many=True)
     
         json_data = JSONRenderer().render(listofuserSerializer.data)
-        res_dict = json.loads(json_data)
-        # printing type and list
-        # print(type(res_dict))
+        res_dict = json.loads(json_data) #list of all user from the database 
+        lengthofalluser = len(res_dict)
+        
+        # print(LogedInUserName)
         #3
         #print the individual element of json_data ?
         print("individual elements")
-        first = res_dict[0]
+
+        # res_dict = [2]
+        # second = res_dict[lengthofalluser-1] #individual user       
+
+     
+        # D_second = second['D_second']
+        # C_second = second['C_second']
+        # friendname = second['name']
         
-        D_second = first['D_second']
-        C_second = first['C_second']
-        print(D_second)
-        print(C_second)
+
+
+        Result = []
+
 
         model = joblib.load(os.path.join('./ABmodel.joblib'))
-        prediction = model.predict([[D_first, C_first, C_second, D_second]])
-        # prediction = model.predict([[1, 1, 1, 1]])
 
-        if (prediction == 0) :
+
+        i = 0
+        for item in  res_dict:
+           
+         second = res_dict[i] #individual user       
+         i = i+1
+          
+         D_second = second['D_second']
+         C_second = second['C_second']
+         friendname = second['name']
+        
+  
+         prediction = model.predict([[D_first, C_first, C_second, D_second]])
+
+         if (prediction == 0) :
             predicted_class = 'Not friend'
-        elif prediction[0] == 3:
+            Result.append('ProfileName:' + LogedInUserName) 
+
+            Result.append('FriendName:'+ friendname) 
+
+            Result.append('Compatiblity:' + predicted_class)  
+ 
+         elif prediction[0] == 3:
              predicted_class = '* * *'
-        elif prediction[0] == 4:
-             predicted_class = '* * * *'    
-        elif prediction[0] == 5:
-             predicted_class = '* * * * *' 
+             Result.append('ProfileName:' + LogedInUserName) 
 
+             Result.append('FriendName:'+   friendname)  
 
+             Result.append('Compatiblity:' + predicted_class)  
+         elif prediction[0] == 4:
+             predicted_class = '* * * *'  
+             Result.append('ProfileName:' + LogedInUserName) 
+
+             Result.append('FriendName:'+ friendname) 
+
+             Result.append('Compatiblity:' + predicted_class)  
+ 
+         elif prediction[0] == 5:
+             predicted_class = '* * * * *'
+             Result.append('ProfileName:' + LogedInUserName) 
+
+             Result.append('FriendName:'+ friendname) 
+             Result.append('Compatiblity:' + predicted_class)  
+
+        print(item,Result)
+          
+             
+
+        # res = list(map(prediction, res_dict))
+
+        # print(res)
+        
+        
 
         print("key and values of D and C")
-   
+        # print(Result)
 
         return JsonResponse({
-            'Prediction': predicted_class
-         })
-
-
-        # return Response(status=status.HTTP_200_OK)
+            'Prediction': Result
+         })                                            # return Response(status=status.HTTP_200_OK)
+      
 
     
     
