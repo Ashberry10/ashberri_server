@@ -7,7 +7,7 @@ from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 
 class UserManager(BaseUserManager):
     # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,D_second,C_second,password=None):
+    def create_user(self, email,name,date_of_birth,password=None):
 
         """
         Creates and saves a User with the given email,name,tc 
@@ -18,9 +18,9 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            # date_of_birth=date_of_birth,
-            D_second=D_second,
-            C_second=C_second,
+            date_of_birth=date_of_birth,
+            # D_second=D_second,
+            # C_second=C_second,
             # C_first=C_first,
             # D_first=D_first,
             name=name,
@@ -40,6 +40,7 @@ class UserManager(BaseUserManager):
             email,
             password=password,
             name= name,
+            
         
           
         )
@@ -56,12 +57,12 @@ class User(AbstractBaseUser):
     )
     name= models.CharField(max_length=200)
     # tc = models.BooleanField()
-    D_first= models.IntegerField(default=0)
-    C_first= models.IntegerField(default=0)
+    # D_first= models.IntegerField(default=0)
+    # C_first= models.IntegerField(default=0)
     C_second = models.IntegerField(default=0)
     D_second = models.IntegerField(default=0)
     # compatibility = models.IntegerField(default=0)
-    # date_of_birth = models.DateField(null=True, )
+    date_of_birth = models.DateField(null=True, )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -73,6 +74,47 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    @property
+    def C_second(self):
+       dob = self.date_of_birth
+
+       day = dob.day
+         
+       month = dob.month
+       year = dob.year
+
+       dobsum = day + year + month
+
+       def digSum(totaldob):     
+          if (totaldob == 0):
+           return 0
+          if (totaldob % 9 == 0):
+            return 9
+          else:
+             return (totaldob % 9)
+
+       C_second = digSum(dobsum)
+      
+
+       return C_second
+
+    @property
+    def D_second(self):
+       dob = self.date_of_birth
+       day = dob.day
+       def digSum(totaldob):     
+          if (totaldob == 0):
+           return 0
+          if (totaldob % 9 == 0):
+            return 9
+          else:
+             return (totaldob % 9)
+
+       D_second = digSum(day)
+      
+
+       return D_second
+
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
