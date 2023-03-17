@@ -1,13 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
+import datetime
+import json
 # Create your models here.
 
 
 #Custon User Manager
-
+# args = ap.parse_args()
 class UserManager(BaseUserManager):
     # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,date_of_birth,password=None):
+    def create_user(self, email,name,day,month,year,password=None):
+    # def create_user(self, email,name,date_of_birth,password=None):
+
 
         """
         Creates and saves a User with the given email,name,tc 
@@ -18,12 +22,16 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            date_of_birth=date_of_birth,
+            
+            day=day,
+            month=month,
+            year=year,
             # D_second=D_second,
             # C_second=C_second,
             # C_first=C_first,
             # D_first=D_first,
             name=name,
+            # date_of_birth=date_of_birth,
             # tc = tc,
         )
 
@@ -61,8 +69,14 @@ class User(AbstractBaseUser):
     # C_first= models.IntegerField(default=0)
     C_second = models.IntegerField(default=0)
     D_second = models.IntegerField(default=0)
+    day = models.IntegerField(default=0)
+    month = models.IntegerField(default=0)
+    year = models.IntegerField(default=0)
     # compatibility = models.IntegerField(default=0)
-    date_of_birth = models.DateField(null=True, )
+    # date_of_birth = models.DateField(null=True)
+    date_of_birth = models.DateTimeField(default=0)
+
+    # date_of_birth = models.DateField(attrs={'input_formats'=['%d-%m-%Y']} )   
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -76,12 +90,12 @@ class User(AbstractBaseUser):
         return self.email
     @property
     def C_second(self):
-       dob = self.date_of_birth
+    #    dob = self.date_of_birth
 
-       day = dob.day
+       day = self.day
          
-       month = dob.month
-       year = dob.year
+       month = self.month
+       year = self.year
 
        dobsum = day + year + month
 
@@ -100,8 +114,8 @@ class User(AbstractBaseUser):
 
     @property
     def D_second(self):
-       dob = self.date_of_birth
-       day = dob.day
+    #    dob = self.date_of_birth
+       day = self.day
        def digSum(totaldob):     
           if (totaldob == 0):
            return 0
@@ -114,6 +128,37 @@ class User(AbstractBaseUser):
       
 
        return D_second
+
+
+
+
+
+
+
+
+    @property
+    def date_of_birth(self):
+       day = self.day
+         
+       month = self.month
+       year = self.year
+
+
+
+    #    date_of_birth  = {month},'/',{year}
+
+       date_of_birth = datetime.date(year,month,day)
+
+       json_str = json.dumps(date_of_birth,default=str)
+    #    print (type(json_str))
+       json_object = json.loads(json_str)
+
+       print(json_object)
+       
+    #    my_new_string  = json_str.replace("\","3")
+       return json_object
+
+
 
 
     def has_perm(self, perm, obj=None):

@@ -41,7 +41,8 @@ class UserRegistrationView(APIView):
         if serializer.is_valid(raise_exception=True):
             user= serializer.save()
             token = get_tokens_for_user(user)
-            return Response({'token':token,'msg':'Registration Successfull'},status=status.HTTP_201_CREATED)
+            # formatDate = user.date_of_birth.strftime("%d/%m/%Y")
+            return Response({'token':token, 'msg':'Registration Successfull'},status=status.HTTP_201_CREATED)
         # print(serializer.errors)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
@@ -77,7 +78,7 @@ class UserLoginView(APIView):
              token = get_tokens_for_user(user)
             #  name = user.name
             #  return Response({'token':token,'name':user.name,'Dfirst':user.Dfirst,'Cfirst':user.Cfirst ,'msg':'Login Successfull'},status=status.HTTP_200_OK)
-             return Response({'name':user.name,'token':token},status=status.HTTP_200_OK)
+             return Response({'name':user.name,'date_of_birth':user.date_of_birth,'token':token},status=status.HTTP_200_OK)
 
             else: 
                 return Response({'errors':{'non_field_errors':['Email or Password-- is not Valid']}},status=status.HTTP_404_NOT_FOUND)    
@@ -113,8 +114,8 @@ class  UserProfileView(APIView):
     permission_classes = [IsAuthenticated]        
     def get(self, request, format=None):
         serializer = UserProfileSerializer(request.user)
-
-        return Response(serializer.data)
+        # json_data = JSONRenderer().render(serializer.data)
+        return Response(serializer.data,content_type ='application/json')
 
 
 
