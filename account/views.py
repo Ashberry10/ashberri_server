@@ -78,7 +78,7 @@ class UserLoginView(APIView):
              token = get_tokens_for_user(user)
             #  name = user.name
             #  return Response({'token':token,'name':user.name,'Dfirst':user.Dfirst,'Cfirst':user.Cfirst ,'msg':'Login Successfull'},status=status.HTTP_200_OK)
-             return Response({'name':user.name,'date_of_birth':user.date_of_birth,'token':token},status=status.HTTP_200_OK)
+             return Response({'username':user.username,'token':token},status=status.HTTP_200_OK)
 
             else: 
                 return Response({'errors':{'non_field_errors':['Email or Password-- is not Valid']}},status=status.HTTP_404_NOT_FOUND)    
@@ -139,12 +139,12 @@ class band_listing(APIView):
     def post(self,request):
         """A view of all bands."""
   
-        name = request.GET.get('name')
+        username = request.GET.get('username')
         roll  = request.GET.get('roll')
  
         # template = "base/home.html"
         context ={
-           'name':name,
+           'username':username,
           'roll':roll
           }
 
@@ -195,7 +195,7 @@ class ModelapiView(APIView):
 
         # 1 geting the data from the loged in user
         LogedInserializer = UserProfileSerializer(request.user)
-        LogedInUserName = LogedInserializer.data['name']
+        LogedInUserName = LogedInserializer.data['username']
         LogedInUseremail = LogedInserializer.data['email']
         C_first = LogedInserializer.data['C_second']
         D_first = LogedInserializer.data['D_second']
@@ -238,7 +238,7 @@ class ModelapiView(APIView):
           
          D_second = second['D_second']
          C_second = second['C_second']
-         friendname = second['name']
+         friendname = second['username']
         
   
          prediction = model.predict([[D_first, C_first, C_second, D_second]])

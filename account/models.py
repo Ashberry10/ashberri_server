@@ -8,13 +8,13 @@ import json
 #Custon User Manager
 # args = ap.parse_args()
 class UserManager(BaseUserManager):
-    # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,day,month,year,password=None):
-    # def create_user(self, email,name,date_of_birth,password=None):
+    # def create_user(self, email,username,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
+    def create_user(self, email,username,day,month,year,password=None):
+    # def create_user(self, email,username,date_of_birth,password=None):
 
 
         """
-        Creates and saves a User with the given email,name,tc 
+        Creates and saves a User with the given email,username,tc 
         and password.
         """
         if not email:
@@ -30,7 +30,7 @@ class UserManager(BaseUserManager):
             # C_second=C_second,
             # C_first=C_first,
             # D_first=D_first,
-            name=name,
+            username=username,
             # date_of_birth=date_of_birth,
             # tc = tc,
         )
@@ -39,15 +39,15 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name,password=None):
+    def create_superuser(self, email, username,password=None):
         """
-        Creates and saves a User with the given email,name,tc 
+        Creates and saves a User with the given email,username,tc 
         and password.
         """
         user = self.create_user(
             email,
             password=password,
-            name= name,
+            username= username,
             
         
           
@@ -63,7 +63,7 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    name= models.CharField(max_length=200)
+    username= models.CharField(max_length=200)
     # tc = models.BooleanField()
     # D_first= models.IntegerField(default=0)
     # C_first= models.IntegerField(default=0)
@@ -84,7 +84,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.email
