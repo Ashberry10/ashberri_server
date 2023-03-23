@@ -13,7 +13,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         # fields = ['email','username','password','date_of_birth'] 
         # DCsecond is calculated in the backgroud we dont need to fill dcsecind ,calculateing function are in models.py
 
-        fields = ['email','username','password','D_second','C_second','day','month','year'] 
+        fields = ['email','name','password','D_second','C_second','day','month','year'] 
 
         # extra_Kwargs={
         #     'password':{'write_only':True}
@@ -45,21 +45,21 @@ class UserLoginSeriailzer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
      model = User
-     fields = ['id', 'email', 'username','day','month','year','date_of_birth','D_second','C_second']
+     fields = ['id', 'email', 'name','day','month','year','date_of_birth','D_second','C_second']
 
 
 
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
      model = User
-     fields = ['id', 'email', 'username','D_second','C_second']
+     fields = ['id', 'email', 'name','D_second','C_second']
 
 
 class GetallUserSeriailzer(serializers.ModelSerializer):
       # email = serializers.EmailField(max_length= 255)
   class Meta:
     model = User
-    fields = ['id', 'email', 'username','D_second','C_second','date_of_birth','day','year','month']
+    fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month']
 
 
 
@@ -150,4 +150,4 @@ class GetallUserDCsecondSeriailzer(serializers.ModelSerializer):
 class GetallUserWithCompSeriailzer(serializers.ModelSerializer):
    class Meta:
     model = User
-    fields = ['username','id',]
+    fields = ['name','id',]
