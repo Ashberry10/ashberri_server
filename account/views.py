@@ -32,6 +32,7 @@ def get_tokens_for_user(user):
     return {
         'refresh':str(refresh),
         'access': str(refresh.access_token),
+     
     }
 
 class UserRegistrationView(APIView):
@@ -40,9 +41,12 @@ class UserRegistrationView(APIView):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user= serializer.save()
-            token = get_tokens_for_user(user)
+            # token = get_tokens_for_user(user)
+            refresh = RefreshToken.for_user(user)
+             
+            accessToken = str(refresh.access_token),
             # formatDate = user.date_of_birth.strftime("%d/%m/%Y")
-            return Response({'token':token, 'msg':'Registration Successfull'},status=status.HTTP_201_CREATED)
+            return Response({'accessToken':accessToken, 'msg':'Registration Successfull'},status=status.HTTP_201_CREATED)
         # print(serializer.errors)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
@@ -75,10 +79,14 @@ class UserLoginView(APIView):
             password = serializer.data.get('password')
             user = authenticate(email=email,password=password)
             if  user is not None:
-             token = get_tokens_for_user(user)
+            #  token = get_tokens_for_user(user)
+            
+             refresh = RefreshToken.for_user(user)
+             
+             accessToken = str(refresh.access_token),
             #  name = user.name
             #  return Response({'token':token,'name':user.name,'Dfirst':user.Dfirst,'Cfirst':user.Cfirst ,'msg':'Login Successfull'},status=status.HTTP_200_OK)
-             return Response({'name':user.name,'token':token},status=status.HTTP_200_OK)
+             return Response({'name':user.name,'accessToken':accessToken},status=status.HTTP_200_OK)
 
             else: 
                 return Response({'errors':{'non_field_errors':['Email or Password-- is not Valid']}},status=status.HTTP_404_NOT_FOUND)    
