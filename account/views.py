@@ -232,15 +232,15 @@ class ModelapiView(APIView):
         
 
 
-        Result = []
+        
 
-
+        Response = []
         model = joblib.load(os.path.join('./ABmodel.joblib'))
 
 
         i = 0
         for item in  res_dict:
-           
+         Result = {} #dictinory   
          second = res_dict[i] #individual user       
          i = i+1
           
@@ -253,35 +253,36 @@ class ModelapiView(APIView):
 
          if (prediction == 0) :
             predicted_class = 'Not friend'
-            Result.append('ProfileName:' + LogedInUserName) 
+            Result.update({'ProfileName': LogedInUserName}) 
 
-            Result.append('FriendName:'+ friendname) 
+            Result.update({'FriendName': friendname}) 
 
-            Result.append('Compatiblity:' + predicted_class)  
+            Result.update({'Compatiblity': predicted_class})  
  
          elif prediction[0] == 3:
              predicted_class = '* * *'
-             Result.append('ProfileName:' + LogedInUserName) 
+             Result.update({'ProfileName': LogedInUserName}) 
 
-             Result.append('FriendName:'+   friendname)  
+             Result.update({'FriendName': friendname}) 
 
-             Result.append('Compatiblity:' + predicted_class)  
+             Result.update({'Compatiblity': predicted_class}) 
          elif prediction[0] == 4:
              predicted_class = '* * * *'  
-             Result.append('ProfileName:' + LogedInUserName) 
+             Result.update({'ProfileName': LogedInUserName}) 
 
-             Result.append('FriendName:'+ friendname) 
+             Result.update({'FriendName': friendname}) 
 
-             Result.append('Compatiblity:' + predicted_class)  
+             Result.update({'Compatiblity': predicted_class}) 
  
          elif prediction[0] == 5:
              predicted_class = '* * * * *'
-             Result.append('ProfileName:' + LogedInUserName) 
+             Result.update({'ProfileName': LogedInUserName}) 
 
-             Result.append('FriendName:'+ friendname) 
-             Result.append('Compatiblity:' + predicted_class)  
+             Result.update({'FriendName': friendname}) 
 
-        print(item,Result)
+             Result.update({'Compatiblity': predicted_class})   
+         Response.append(Result) 
+        # print(item,Result)
           
              
 
@@ -289,18 +290,20 @@ class ModelapiView(APIView):
 
         # print(res)
         
-        
-
-        print("key and values of D and C")
+ 
         # print(Result)
 
-        return JsonResponse({
-            'Prediction': Result
-         })                                            # return Response(status=status.HTTP_200_OK)
-      
+        # return JsonResponse({
+        #     'Prediction': Response
+        #     # 'friend':friendname,
+        #     # 'yourname':LogedInUserName
 
-    
-    
+        #  })                                            # return Response(status=status.HTTP_200_OK)
+
+        return JsonResponse(
+            Response,safe=False
+         )                                            # return Response(status=status.HTTP_200_OK)
+      
 
 
     
