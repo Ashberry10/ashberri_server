@@ -195,118 +195,7 @@ class band_listing(APIView):
 
 
 
-class ModelapiView(APIView):
-    renderer_classes = [UserRenderer]
-    permission_classes = [IsAuthenticated]
-    
-    def get(self, request, format=None):
 
-        # 1 geting the data from the loged in user
-        LogedInserializer = UserProfileSerializer(request.user)
-        LogedInUserName = LogedInserializer.data['name']
-        LogedInUseremail = LogedInserializer.data['email']
-        C_first = LogedInserializer.data['C_second']
-        D_first = LogedInserializer.data['D_second']
-
-        # 2 list of user from the database
-        listofuser = User.objects.all()
-        # listofuserSerializer = GetallUserDCsecondSeriailzer(listofuser,many=True)     # listofuser = User.objects.values('D_second','C_second')
-        listofuserSerializer = GetallUserSeriailzer(listofuser,many=True)
-    
-        json_data = JSONRenderer().render(listofuserSerializer.data)
-        res_dict = json.loads(json_data) #list of all user from the database 
-        lengthofalluser = len(res_dict)
-        
-        # print(LogedInUserName)
-        #3
-        #print the individual element of json_data ?
-        print("individual elements")
-
-        # res_dict = [2]
-        # second = res_dict[lengthofalluser-1] #individual user       
-
-     
-        # D_second = second['D_second']
-        # C_second = second['C_second']
-        # friendname = second['name']
-        
-
-
-        
-
-        Response = []
-        model = joblib.load(os.path.join('./ABmodel.joblib'))
-
-
-        i = 0
-        for item in  res_dict:
-         Result = {} #dictinory   
-         second = res_dict[i] #individual user       
-         i = i+1
-          
-         D_second = second['D_second']
-         C_second = second['C_second']
-         friendname = second['name']
-        
-  
-         prediction = model.predict([[D_first, C_first, C_second, D_second]])
-
-         if (prediction == 0) :
-            predicted_class = 'Not friend'
-            Result.update({'ProfileName': LogedInUserName}) 
-
-            Result.update({'FriendName': friendname}) 
-
-            Result.update({'Compatiblity': predicted_class})  
- 
-         elif prediction[0] == 3:
-             predicted_class = '* * *'
-             Result.update({'ProfileName': LogedInUserName}) 
-
-             Result.update({'FriendName': friendname}) 
-
-             Result.update({'Compatiblity': predicted_class}) 
-         elif prediction[0] == 4:
-             predicted_class = '* * * *'  
-             Result.update({'ProfileName': LogedInUserName}) 
-
-             Result.update({'FriendName': friendname}) 
-
-             Result.update({'Compatiblity': predicted_class}) 
- 
-         elif prediction[0] == 5:
-             predicted_class = '* * * * *'
-             Result.update({'ProfileName': LogedInUserName}) 
-
-             Result.update({'FriendName': friendname}) 
-
-             Result.update({'Compatiblity': predicted_class})   
-         Response.append(Result) 
-        # print(item,Result)
-          
-             
-
-        # res = list(map(prediction, res_dict))
-
-        # print(res)
-        
- 
-        # print(Result)
-
-        # return JsonResponse({
-        #     'Prediction': Response
-        #     # 'friend':friendname,
-        #     # 'yourname':LogedInUserName
-
-        #  })                                            # return Response(status=status.HTTP_200_OK)
-
-        return JsonResponse(
-            Response,safe=False
-         )                                            # return Response(status=status.HTTP_200_OK)
-      
-
-
-    
     
     
 
@@ -352,12 +241,27 @@ class ModelapiView(APIView):
 
 class AllUser(APIView): 
     def get(self, request, *args,**kwargs):
+     try:
+        id = request.query_params["id"]
+        if id is not None:
+         stu = User.objects.get(id=id)
+         serializer =  GetallUserSeriailzer(stu)
+         json_data = JSONRenderer().render(serializer.data)
+         return HttpResponse(json_data,content_type ='application/json')
+
+
+     except:
+
       stu = User.objects.all()
       serializer = GetallUserSeriailzer(stu,many=True)
       json_data = JSONRenderer().render(serializer.data)
       return HttpResponse(json_data,content_type ='application/json')
 
-
+    
+    # def get(self,request, *args,**kwargs):
+    #     id = request.query_params["id"]
+    #     print(id)
+        
 
 
 
