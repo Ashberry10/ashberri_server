@@ -1,19 +1,28 @@
 from rest_framework import serializers
 from account.models import User
-from xml.dom import ValidationErr
-from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
+# from xml.dom import ValidationErr
+# from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
+# from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+# from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from account.utils import Util
+
+
+
+
+
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
       # password2 = serializers.CharField(style={'input_type':'password'},write_only =True)
+      # profile = ProfileSerializer(read_only=True)
       class Meta:
         model = User
         # fields = ['email','username','password','date_of_birth'] 
         # DCsecond is calculated in the backgroud we dont need to fill dcsecind ,calculateing function are in models.py
 
-        fields = ['email','name','password','D_second','C_second','day','month','year'] 
+        fields = ['email','name','password','D_second','C_second','day','month','year','profile_photo'] 
+        # fields = ['email','name','password','D_second','C_second','day','month','year'] 
+
 
         # extra_Kwargs={
         #     'password':{'write_only':True}
@@ -59,7 +68,8 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
       # email = serializers.EmailField(max_length= 255)
   class Meta:
     model = User
-    fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month']
+    fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month','profile_photo']
+
 
 
 

@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.parsers import FormParser,MultiPartParser,JSONParser
 from account.serializers import UserRegistrationSerializer,GetallUserDCsecondSeriailzer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer,UserModelSerializer,GetallUserWithCompSeriailzer
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
@@ -16,6 +17,7 @@ import jwt, datetime
 from django.shortcuts import render
 from django.template import Context, RequestContext
 import joblib
+from rest_framework.decorators import action
 import requests
 # from rest_framework import generics
 import json
@@ -40,15 +42,27 @@ class UserRegistrationView(APIView):
     def post(self,request,format=None):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user= serializer.save()
+            user = serializer.save()
             # token = get_tokens_for_user(user)
             refresh = RefreshToken.for_user(user)
-             
+
+            # perser_classes = (JSONParser,FormParser,MultiPartParser)
             accessToken = str(refresh.access_token),
             # formatDate = user.date_of_birth.strftime("%d/%m/%Y")
             return Response({'accessToken':accessToken, 'msg':'Registration Successfull'},status=status.HTTP_201_CREATED)
         # print(serializer.errors)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    # @action(detail=True,method=['put'])
+    # def profile(self,request,pk=None):
+    #     user = self.get_object()
+    #     profile = user.profile
+    #     serializer = ProfileSerializer(profile,data=request.data)
+    #     if serializer.is_valid:
+    #         serializer.save()
+    #         return Response(serializer.data,status=200)
+    #     else:
+    #         return Response(serializer.errors,status=400)
+    
     
     
 # class UserLoginView(APIView):

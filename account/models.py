@@ -2,14 +2,16 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 import datetime
 import json
+from django.contrib.auth.models import User
 # Create your models here.
+
 
 
 #Custon User Manager
 # args = ap.parse_args()
 class UserManager(BaseUserManager):
     # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,day,month,year,password=None):
+    def create_user(self, email,name,day,month,year,profile_photo,password=None):
     # def create_user(self, email,name,date_of_birth,password=None):
 
 
@@ -31,6 +33,7 @@ class UserManager(BaseUserManager):
             # C_first=C_first,
             # D_first=D_first,
             name=name,
+            profile_photo=profile_photo
             # date_of_birth=date_of_birth,
             # tc = tc,
         )
@@ -38,6 +41,9 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+
+
 
     def create_superuser(self, email, name,password=None):
         """
@@ -49,8 +55,6 @@ class UserManager(BaseUserManager):
             password=password,
             name= name,
             
-        
-          
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -75,7 +79,7 @@ class User(AbstractBaseUser):
     # compatibility = models.IntegerField(default=0)
     # date_of_birth = models.DateField(null=True)
     date_of_birth = models.DateTimeField(default=0)
-
+    profile_photo = models.ImageField(upload_to='profile_photo/%Y/%m/%d',max_length=255,null=True,blank=True)
     # date_of_birth = models.DateField(attrs={'input_formats'=['%d-%m-%Y']} )   
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -85,6 +89,11 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
+
+
+
+
+
 
     def __str__(self):
         return self.email
@@ -176,3 +185,5 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+

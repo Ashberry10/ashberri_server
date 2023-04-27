@@ -37,9 +37,9 @@ class ModelapiView(APIView):
     permission_classes = [IsAuthenticated]
     
     def get(self, request, format=None):
-     
+         
    
-     
+      
       try:
          id = request.query_params["id"]
          if id is not None:
