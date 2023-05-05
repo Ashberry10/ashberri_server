@@ -15,12 +15,17 @@ from account.utils import Util
 class UserRegistrationSerializer(serializers.ModelSerializer):
       # password2 = serializers.CharField(style={'input_type':'password'},write_only =True)
       # profile = ProfileSerializer(read_only=True)
+    #   class ImageSerializer(serializers.ModelSerializer):
+    #     file = serializers.ImageField(
+    #     max_length=None, use_url=True,
+    # )
       class Meta:
         model = User
         # fields = ['email','username','password','date_of_birth'] 
         # DCsecond is calculated in the backgroud we dont need to fill dcsecind ,calculateing function are in models.py
-
-        fields = ['email','name','password','D_second','C_second','day','month','year','profile_photo'] 
+        # file = serializers.ImageField(max_length=None, allow_empty_file=False, allow_null=False, use_url=True, required=False)
+        
+        fields = ['email','name','password','D_second','C_second','day','month','year'] 
         # fields = ['email','name','password','D_second','C_second','day','month','year'] 
 
 
@@ -68,7 +73,7 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
       # email = serializers.EmailField(max_length= 255)
   class Meta:
     model = User
-    fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month','profile_photo']
+    fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month','file']
 
 
 

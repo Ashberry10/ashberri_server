@@ -107,30 +107,7 @@ class UserLoginView(APIView):
 
 
 
-# # AB model api
-# class ModelapiView(APIView):
-#     renderer_classes = [UserRenderer]
-#     permission_classes = [IsAuthenticated]        
-#     def get(self, request, format=None):
-#         serializer = UserProfileSerializer(request.user)
-#         # D_first = request.data['D_first']
-#         # C_first = request.data['C_first'] 
-#         # C_second = request.data['C_second'] 
-#         # D_second = request.data['D_second'] 
-#        # model = joblib.load(os.path.join('./ABmodel.joblib'))
-#         # p rediction = model.predict([[D_first, C_first, C_second, D_second]])
-#         # prediction = model.predict([[1, 1, 1, 1]])
 
-#         # if (prediction == 0) :
-#         #     predicted_class = 'Not friend'
-#         # elif prediction[0] == 3:
-#         #      predicted_class = '* * *'
-#         # elif prediction[0] == 4:
-#         #      predicted_class = '* * * *'    
-#         # elif prediction[0] == 5:
-#         #      predicted_class = '* * * * *' 
-#         return Response("dssdf",serializer.data)
-           
 class  UserProfileView(APIView):
     renderer_classes = [UserRenderer]
     permission_classes = [IsAuthenticated]        
