@@ -118,81 +118,6 @@ class  UserProfileView(APIView):
 
 
 
-
-
-
-
-# def courseDetails(request,courseid):
-
-#      r = requests.get('http://127.0.0.1:8000/api/user/getallusers/')
-#      return Response(r)
-
-
-
-
-
-
-
-class band_listing(APIView):
-    
-    def post(self,request):
-        """A view of all bands."""
-  
-        name = request.GET.get('name')
-        roll  = request.GET.get('roll')
- 
-        # template = "base/home.html"
-        context ={
-           'name':name,
-          'roll':roll
-          }
-
-
-        # r = requests.get('http://127.0.0.1:8000/api/user/getallusers/')
-        return Response(context) 
-        # return Response(r) 
-
-    
-    
-    
-
-
-# def band_listing(request):
-#     """A view of all bands."""
-#     # bands = Band.objects.all()
-#     name = request.GET.get('name')
-#     roll  = request.GET.get('roll')
- 
-#     template = "base/home.html"
-#     context ={
-#         'name':name,
-#         'roll':roll
-#     }
-    
-    
-    
-#     # return render(request, template,context)
-      
-
-
-      
-
-# Note:- DCsecond for login user and  all the user 
-# but in function we are making CDfirst for login and  
-# CDsecond for other user except loged in one ,in such  
-# a way that we can make successfull pridiction
-
-
-
-
-
-
-    
-    
-
-
-
-
 # class UserChangePassword(APIView):
 #     renderer_classes = [UserRenderer]
 #     permission_classes = [IsAuthenticated]
@@ -248,6 +173,9 @@ class AllUser(APIView):
       json_data = JSONRenderer().render(serializer.data)
       return HttpResponse(json_data,content_type ='application/json')
 
+
+
+       
     
     # def get(self,request, *args,**kwargs):
     #     id = request.query_params["id"]
