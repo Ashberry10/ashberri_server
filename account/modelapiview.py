@@ -30,6 +30,11 @@ model = joblib.load('./ABmodel.joblib')
 
 
 
+# Note:- DCsecond for login user and  all the user 
+# but in function we are making CDfirst for login and  
+# CDsecond for other user except loged in one ,in such  
+# a way that we can make successfull pridiction
+
 
 
 class ModelapiView(APIView):

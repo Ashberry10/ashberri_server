@@ -19,7 +19,7 @@ urlpatterns = [
     path('Modelapi/<int:id>',ModelapiView.as_view(),name='ModelapiView'),
 
     # path('course/<int:courseid>' ,views.courseDetails),
-    path('band_listing/',band_listing.as_view(), name='band_listing'),
+
     # path('course/<int:courseid>/<int:secondid>' ,views.courseDetails)
 
 
