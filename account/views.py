@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.parsers import FormParser,MultiPartParser,JSONParser
-from account.serializers import UserRegistrationSerializer,GetallUserDCsecondSeriailzer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer,UserModelSerializer,GetallUserWithCompSeriailzer
+from account.serializers import UpdateUserSeriailzer, UserRegistrationSerializer,GetallUserDCsecondSeriailzer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer,UserModelSerializer,GetallUserWithCompSeriailzer
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.http import JsonResponse
@@ -248,11 +248,17 @@ class AllUser(APIView):
       json_data = JSONRenderer().render(serializer.data)
       return HttpResponse(json_data,content_type ='application/json')
 
-    
-    # def get(self,request, *args,**kwargs):
-    #     id = request.query_params["id"]
-    #     print(id)
-        
+
+class User(APIView):
+   def patch(self, request):               #update user profile 
+      user = request.user                  #user refer to the loged in user (token)
+      serializer = UpdateUserSeriailzer(user, data=request.data, partial = True)
+      if serializer.is_valid():
+         serializer.save()
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      else:
+         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

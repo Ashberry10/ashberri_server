@@ -1,6 +1,6 @@
 
 # from account.views import UserPasswordResetView,UserRegistrationView,SendPasswordResetEmailView,UserLoginView,AllStudents,UserProfileView,UserChangePassword
-from account.views import UserLoginView,UserRegistrationView,AllUser,UserProfileView,band_listing
+from account.views import UserLoginView,UserRegistrationView,AllUser,UserProfileView,band_listing,User
 from account.modelapiview import ModelapiView
 from  account import views
 from django.urls import path,include
@@ -12,6 +12,7 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(),name='login'),
     path('getallusers/', AllUser.as_view(),name='getallusers'),
     path('getallusers/<int:id>',AllUser.as_view()),
+    path('update/',User.as_view(), name='user_update'),
     # path('getalluserswithcomp/', AllUserwithComp.as_view(),name='getalluserswithcomp'),
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('Modelapi/',ModelapiView.as_view(), name='ModelapiView'),
