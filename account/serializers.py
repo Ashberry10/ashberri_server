@@ -80,10 +80,10 @@ class UpdateUserSeriailzer(serializers.ModelSerializer):
     model = User
     fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month','file']
 
-class UpdateUserSeriailzer(serializers.ModelSerializer): # for updating your profile
-  class Meta:
-    model = User
-    fields = ['name','email']
+# class UpdateUserSeriailzer(serializers.ModelSerializer): # for updating your profile
+#   class Meta:
+#     model = User
+#     fields = ['name','email']
 
 
 

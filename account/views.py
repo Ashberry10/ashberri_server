@@ -148,13 +148,6 @@ class  UserProfileView(APIView):
 
 
 
-
-
-
-
-
-
-
 class AllUser(APIView): 
     def get(self, request, *args,**kwargs):
      try:
@@ -174,7 +167,9 @@ class AllUser(APIView):
       return HttpResponse(json_data,content_type ='application/json')
 
 
-class User(APIView):
+
+
+class UpdateUser(APIView):
    def patch(self, request):               #update user profile 
       user = request.user                  #user refer to the loged in user (token)
       serializer = UpdateUserSeriailzer(user, data=request.data, partial = True)
