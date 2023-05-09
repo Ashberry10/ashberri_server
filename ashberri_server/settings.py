@@ -28,7 +28,7 @@ SECRET_KEY = 'h!b-!1u#894v=o0!g5wedgs^#bi8*jmr*h^jrymc70w(!usrjd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','*', 'ashberri-api.netlify.app', 'https://ashberri-api.netlify.app/']
 
 # Application definition
 
