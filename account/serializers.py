@@ -61,13 +61,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
      model = User
      fields = ['id', 'email', 'name','day','month','year','date_of_birth','D_second','C_second']
 
-
-
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
      model = User
      fields = ['id', 'email', 'name','D_second','C_second']
-
 
 class GetallUserSeriailzer(serializers.ModelSerializer):
       # email = serializers.EmailField(max_length= 255)
@@ -78,7 +75,9 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
 class UpdateUserSeriailzer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month','file']
+    fields = [ 'email', 'name','day','year','month']
+    # fields = [ 'email', 'name','day','year','month','file']
+
 
 # class UpdateUserSeriailzer(serializers.ModelSerializer): # for updating your profile
 #   class Meta:
