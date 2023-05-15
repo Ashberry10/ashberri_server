@@ -100,7 +100,7 @@ class UserLoginView(APIView):
              accessToken = str(refresh.access_token),
             #  name = user.name
             #  return Response({'token':token,'name':user.name,'Dfirst':user.Dfirst,'Cfirst':user.Cfirst ,'msg':'Login Successfull'},status=status.HTTP_200_OK)
-             return Response({'firstname':user.firstname,'accessToken':accessToken},status=status.HTTP_200_OK)
+             return Response({'name':user.name,'accessToken':accessToken},status=status.HTTP_200_OK)
 
             else: 
                 return Response({'errors':{'non_field_errors':['Email or Password-- is not Valid']}},status=status.HTTP_404_NOT_FOUND)    
