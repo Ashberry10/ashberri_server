@@ -59,7 +59,7 @@ class UserLoginSeriailzer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
      model = User
-     fields = ['id', 'email', 'name','day','month','year','date_of_birth','D_second','C_second']
+     fields = ['id', 'email', 'name','day','month','year','date_of_birth','D_second','C_second','file']
 
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,8 +75,9 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
 class UpdateUserSeriailzer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = [ 'email', 'name','day','year','month']
-    # fields = [ 'email', 'name','day','year','month','file']
+    # fields = [ 'email', 'name','day','year','month']
+    file = serializers.ImageField(max_length=None, allow_empty_file=False, allow_null=False, use_url=True, required=False)
+    fields = [ 'email', 'name','day','year','month','file']
 
 
 # class UpdateUserSeriailzer(serializers.ModelSerializer): # for updating your profile
