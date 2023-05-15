@@ -21,12 +21,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     # )
       class Meta:
         model = User
-        # fields = ['email','username','password','date_of_birth'] 
+        # fields = ['email','userfirstname','password','date_of_birth'] 
         # DCsecond is calculated in the backgroud we dont need to fill dcsecind ,calculateing function are in models.py
         # file = serializers.ImageField(max_length=None, allow_empty_file=False, allow_null=False, use_url=True, required=False)
         
-        fields = ['email','name','password','D_second','C_second','day','month','year'] 
-        # fields = ['email','name','password','D_second','C_second','day','month','year'] 
+        fields = ['email','firstname','surname','password','D_second','C_second','day','month','year'] 
+        # fields = ['email','firstname','password','D_second','C_second','day','month','year'] 
 
 
         # extra_Kwargs={
@@ -59,30 +59,30 @@ class UserLoginSeriailzer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
      model = User
-     fields = ['id', 'email', 'name','day','month','year','date_of_birth','D_second','C_second']
+     fields = ['id', 'email', 'firstname','surname','day','month','year','date_of_birth','D_second','C_second']
 
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
      model = User
-     fields = ['id', 'email', 'name','D_second','C_second']
+     fields = ['id', 'email', 'firstname','surname','D_second','C_second']
 
 class GetallUserSeriailzer(serializers.ModelSerializer):
       # email = serializers.EmailField(max_length= 255)
   class Meta:
     model = User
-    fields = ['id', 'email', 'name','D_second','C_second','date_of_birth','day','year','month','file']
+    fields = ['id', 'email', 'firstname','surname','D_second','C_second','date_of_birth','day','year','month','file']
 
 class UpdateUserSeriailzer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = [ 'email', 'name','day','year','month']
-    # fields = [ 'email', 'name','day','year','month','file']
+    fields = [ 'email', 'firstname','surname','day','year','month']
+    # fields = [ 'email', 'firstname','day','year','month','file']
 
 
 # class UpdateUserSeriailzer(serializers.ModelSerializer): # for updating your profile
 #   class Meta:
 #     model = User
-#     fields = ['name','email']
+#     fields = ['firstname','email']
 
 
 
@@ -173,4 +173,4 @@ class GetallUserDCsecondSeriailzer(serializers.ModelSerializer):
 class GetallUserWithCompSeriailzer(serializers.ModelSerializer):
    class Meta:
     model = User
-    fields = ['name','id',]
+    fields = ['firstname','surname','id',]
