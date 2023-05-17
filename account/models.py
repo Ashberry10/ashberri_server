@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 # args = ap.parse_args()
 class UserManager(BaseUserManager):
     # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,day,month,year,password=None):
+    def create_user(self, email,name,day,month,year,file,password=None):
     # def create_user(self, email,name,date_of_birth,password=None):
 
 
@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
             # C_first=C_first,
             # D_first=D_first,
             name=name,
-            # file=file
+            file=file
             # date_of_birth=date_of_birth,
             # tc = tc,
         )
