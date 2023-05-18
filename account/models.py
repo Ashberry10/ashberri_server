@@ -187,36 +187,36 @@ class User(AbstractBaseUser):
         return self.is_admin
 
 
-#models to review
-class User(models.Model):
-    username = models.CharField(max_length=100)
-    email = models.EmailField()
-    password = models.CharField(max_length=100)
-    profile_picture = models.ImageField(upload_to='profile_pictures')
-    registration_date = models.DateTimeField(auto_now_add=True)
+# #models to review
+# class User(models.Model):
+#     username = models.CharField(max_length=100)
+#     email = models.EmailField()
+#     password = models.CharField(max_length=100)
+#     profile_picture = models.ImageField(upload_to='profile_pictures')
+#     registration_date = models.DateTimeField(auto_now_add=True)
 
-class Post(models.Model):
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+# class Post(models.Model):
+#     content = models.TextField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
-class Comment(models.Model):
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+# class Comment(models.Model):
+#     content = models.TextField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
-class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+# class Like(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
-class Friendship(models.Model):
-    user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendships')
-    user2 = models.ForeignKey(User, on_delete=models.CASCADE)
+# class Friendship(models.Model):
+#     user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendships')
+#     user2 = models.ForeignKey(User, on_delete=models.CASCADE)
 
-class Notification(models.Model):
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+# class Notification(models.Model):
+#     content = models.TextField()
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
 
 
