@@ -1,6 +1,6 @@
 
 # from account.views import UserPasswordResetView,UserRegistrationView,SendPasswordResetEmailView,UserLoginView,AllStudents,UserProfileView,UserChangePassword
-from account.views import UserLoginView,UserRegistrationView,AllUser,UserProfileView,UpdateUser
+from account.views import UserLoginView,UserRegistrationView,AllUser,UserProfileView,UpdateUser,UserDeleteView
 from account.modelapiview import ModelapiView
 from  account import views
 from django.urls import path,include
@@ -17,7 +17,7 @@ urlpatterns = [
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('Modelapi/',ModelapiView.as_view(), name='ModelapiView'),
     path('Modelapi/<int:id>',ModelapiView.as_view(),name='ModelapiView'),
-
+    path('deleteuser/<int:id>', UserDeleteView.as_view(), name='user-delete'),
     # path('course/<int:courseid>' ,views.courseDetails),
 
     # path('course/<int:courseid>/<int:secondid>' ,views.courseDetails)

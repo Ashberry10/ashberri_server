@@ -181,6 +181,19 @@ class UpdateUser(APIView):
 
 
 
+# delete api
+
+class UserDeleteView(APIView):
+    def delete(self, request, id):
+        try:
+            id = request.query_params["id"]
+            user = User.objects.get(id=id)
+            user.delete()
+            return Response({'message': 'User deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'},status=status.HTTP_404_NOT_FOUND)
+
+
 
 
 #get all user with comp (after login then this route will be accessiable)
@@ -208,11 +221,6 @@ class UpdateUser(APIView):
 #       sdf = go()
 #       json_data = JSONRenderer().render(serializer.data)
 #       return HttpResponse(json_data,sdf,content_type ='application/json')
-
-
-
-
-
 
 
 

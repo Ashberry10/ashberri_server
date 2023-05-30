@@ -1,3 +1,5 @@
+
+
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 import datetime
@@ -45,7 +47,7 @@ class UserManager(BaseUserManager):
 
 
 
-    def create_superuser(self, email, name,password=None):
+    def create_superuser(self, email, name,day,month,year,file,password=None):
         """
         Creates and saves a User with the given email,name,tc 
         and password.
@@ -54,6 +56,10 @@ class UserManager(BaseUserManager):
             email,
             password=password,
             name= name,
+            day=day,
+            month=month,
+            year=year,
+            file=file
             
         )
         user.is_admin = True
@@ -68,7 +74,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     name= models.CharField(max_length=200)
-    # tc = models.BooleanField()
+ 
     # D_first= models.IntegerField(default=0)
     # C_first= models.IntegerField(default=0)
     C_second = models.IntegerField(default=0)
@@ -218,5 +224,3 @@ class User(AbstractBaseUser):
 #     content = models.TextField()
 #     timestamp = models.DateTimeField(auto_now_add=True)
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
-
-
