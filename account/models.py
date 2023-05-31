@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 # args = ap.parse_args()
 class UserManager(BaseUserManager):
     # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,day,month,year,file,password=None):
+    def create_user(self, email,name,day,month,year,password=None):
     # def create_user(self, email,name,date_of_birth,password=None):
 
 
@@ -35,7 +35,7 @@ class UserManager(BaseUserManager):
             # C_first=C_first,
             # D_first=D_first,
             name=name,
-            file=file
+            # file=file
             # date_of_birth=date_of_birth,
             # tc = tc,
         )
@@ -85,7 +85,7 @@ class User(AbstractBaseUser):
     # compatibility = models.IntegerField(default=0)
     # date_of_birth = models.DateField(null=True)
     date_of_birth = models.DateTimeField(default=0)
-    file = models.ImageField(upload_to='profile_photo/%Y/%m/%d',null=True,blank=True,verbose_name='profile_photo')
+    file = models.ImageField(upload_to='profile_photo/%Y/%m/%d',null=True,blank=True,verbose_name='profile_photo',default='defaultuserpic.png')
     # date_of_birth = models.DateField(attrs={'input_formats'=['%d-%m-%Y']} )   
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

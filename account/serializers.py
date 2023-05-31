@@ -25,7 +25,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         # DCsecond is calculated in the backgroud we dont need to fill dcsecind ,calculateing function are in models.py
         # file = serializers.ImageField(max_length=None, allow_empty_file=False, allow_null=False, use_url=True, required=False)
         
-        fields = ['email','name','password','D_second','C_second','day','month','year','file'] 
+        fields = ['email','name','password','D_second','C_second','day','month','year'] 
         # fields = ['email','name','password','D_second','C_second','day','month','year'] 
 
 
