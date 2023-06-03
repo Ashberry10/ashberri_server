@@ -45,6 +45,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','*', 'ashberri-api.netlify.app', 'http
 # Application definition
 
 INSTALLED_APPS = [
+    'account',
+    'friend',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +54,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'account',
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
