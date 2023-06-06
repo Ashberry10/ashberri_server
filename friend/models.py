@@ -9,7 +9,7 @@ class FriendList(models.Model):
     friends = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="friends")
 
     def __str__(self):
-        return self.user.username
+        return self.user.name
 
     def add_friend(self,account):
         """
@@ -70,7 +70,7 @@ class FriendRequest(models.Model):
 
 
     def __str__(self):
-        return self.sender.username
+        return self.sender.name
 
 
 

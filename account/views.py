@@ -21,6 +21,7 @@ from rest_framework.decorators import action
 import requests
 # from rest_framework import generics
 import json
+from friend.models import FriendList, FriendRequest
 import os
 # from rest_framework import filters
 model = joblib.load('./ABmodel.joblib')
@@ -109,12 +110,45 @@ class UserLoginView(APIView):
 
 
 class  UserProfileView(APIView):
+
+    """
+	- Logic here is kind of tricky
+		is_self
+		is_friend
+			-1: NO_REQUEST_SENT
+			0: THEM_SENT_TO_YOU
+			1: YOU_SENT_TO_THEM
+	"""
     renderer_classes = [UserRenderer]
     permission_classes = [IsAuthenticated]        
     def get(self, request, format=None):
+        # try:
+        #     friend_list = FriendList.ojects.get(request.user)
+        # except FriendList.DoesNotExist:
+        #     pass
+        
         serializer = UserProfileSerializer(request.user)
         # json_data = JSONRenderer().render(serializer.data)
         return Response(serializer.data,content_type ='application/json')
+
+
+
+
+
+
+
+
+
+# class  UserProfileView(APIView):
+#     renderer_classes = [UserRenderer]
+#     permission_classes = [IsAuthenticated]        
+#     def get(self, request, format=None):
+#         serializer = UserProfileSerializer(request.user)
+#         # json_data = JSONRenderer().render(serializer.data)
+#         return Response(serializer.data,content_type ='application/json')
+
+
+
 
 
 
