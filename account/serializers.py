@@ -5,7 +5,7 @@ from account.models import User
 # from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 # from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from account.utils import Util
-
+from friend.models import FriendRequest
 
 
 
@@ -54,7 +54,10 @@ class UserLoginSeriailzer(serializers.ModelSerializer):
     fields = ['email','password']
 
 
-
+class FriendRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendRequest
+        fields = '__all__'
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

@@ -6,8 +6,9 @@ import datetime
 import json
 from django.contrib.auth.models import User
 # Create your models here.
-
-
+from django.dispatch import receiver
+from friend.models import FriendList
+from django.db.models.signals import post_save
 
 #Custon User Manager
 # args = ap.parse_args()
@@ -191,6 +192,12 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+    
+    
+@receiver(post_save, sender=User)
+def user_save(sender, instance, **kwargs):
+    FriendList.objects.get_or_create(user=instance)
+
 
 
 # #models to review
