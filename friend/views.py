@@ -2,7 +2,7 @@ from django.shortcuts import render
 import json
 # Create your views here.
 from account.models import UserManager,User
-from friend.models import FriendRequest
+from friend.models import  FriendShip
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,7 +11,7 @@ from account.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .serializers import FriendRequestSerializer
+from .serializers import FriendShipSerializer
 
 # def send_friend_request(request, *args, **kwargs):
 #     user = request.user
@@ -173,11 +173,60 @@ from .serializers import FriendRequestSerializer
 
 class SendFriendRequestView(APIView):
     def post(self, request):
-        serializer = FriendRequestSerializer(data=request.data)
+        serializer = FriendShipSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+# class AcceptFriendRequestAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request):
+#         friend_request_id = request.data.get('friend_request_id')
+        
+#         try:
+#             friend_request = FriendRequest.objects.get(id=friend_request_id)
+#         except FriendRequest.DoesNotExist:
+#             return Response({'message': 'Friend request does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+#         # Perform any additional checks or validations here
+        
+#         # Accept the friend request
+#         friend_request.accept()
+        
+#         return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
+
+
+
+
+class AcceptOrRejectFriendRequestAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        friend_request_id = request.data.get('friend_request_id')
+        
+        try:
+            friend_request = FriendShip.objects.get(id=friend_request_id)
+        except FriendShip.DoesNotExist:
+            return Response({'message': 'Friend request does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Perform any additional checks or validations here
+        
+        action = request.data.get('action')
+        
+        if action == 'accept':
+            friend_request.accept()
+            return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
+        elif action == 'reject':
+            friend_request.reject()
+            return Response({'message': 'Friend request rejected.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FriendRequestAPIView(APIView):
@@ -185,6 +234,37 @@ class FriendRequestAPIView(APIView):
 
     def get(self, request):
         user_id = request.user.id
-        friend_requests = FriendRequest.objects.filter(receiver_id=user_id)
-        serializer = FriendRequestSerializer(friend_requests, many=True)
+        friend_requests = FriendShip.objects.filter(receiver_id=user_id)
+        serializer = FriendShipSerializer(friend_requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UnfriendAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user_id = request.data.get('user_id')
+        
+        try:
+            friendShip = FriendShip.objects.filter(sender=request.user, receiver__id=user_id).first() \
+                         or FriendShip.objects.filter(receiver=request.user, sender__id=user_id).first()
+        except FriendShip.DoesNotExist:
+            return Response({'message': 'FriendShip does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        friendShip.delete()
+        
+        return Response({'message': 'Unfriended successfully.'}, status=status.HTTP_200_OK)
+
+
+
+
+class CancelFriendRequestAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, request_id):
+        try:
+            friend_request = FriendShip.objects.get(id=request_id, sender=request.user)
+            friend_request.delete()
+            return Response({'message': 'Friend request canceled successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        except FriendShip.DoesNotExist:
+            return Response({'message': 'Friend request not found.'}, status=status.HTTP_404_NOT_FOUND)

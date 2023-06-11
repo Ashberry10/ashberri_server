@@ -1,7 +1,7 @@
-from friend.models import FriendRequest
+from friend.models import FriendShip
 
 def get_friend_request_or_false(sender,receiver):
     try:
-        return FriendRequest.object.get(sender=sender,receiver=receiver,isactive= True)
-    except FriendRequest.DoesNotExist:
+        return FriendShip.object.get(sender=sender,receiver=receiver,isactive= True)
+    except FriendShip.DoesNotExist:
         return False

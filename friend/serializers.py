@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import FriendRequest
+from .models import FriendShip
 
-class FriendRequestSerializer(serializers.ModelSerializer):
+class FriendShipSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FriendRequest
+        model = FriendShip
         # receiver_user_id = serializers.IntegerField()
         fields = '__all__'

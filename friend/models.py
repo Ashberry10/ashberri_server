@@ -32,7 +32,7 @@ class FriendList(models.Model):
         """
         Initiate the action of unfriending someone.
         """
-        remover_friends_list = self #person terminating the friendship
+        remover_friends_list = self #person terminating the FriendShip
 
         #Remove Friend from remover friend list 
         remover_friends_list.remove_friend(removee)
@@ -127,14 +127,53 @@ class FriendList(models.Model):
 
 
 
-class FriendRequest(models.Model):
+# class FriendRequest(models.Model):
+#     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_friend_requests')
+#     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_friend_requests')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     accepted = models.BooleanField(default=False)
+
+#     class Meta:
+#         unique_together = ('sender', 'receiver')
+
+#     def __str__(self):
+#         return f"{self.sender} -> {self.receiver}"
+
+
+    
+#     def accept(self):
+#         # Implement the logic for accepting the friend request here
+#         # For example, you might update the status of the friend request or create a new FriendShip record
+#         # You can customize this method based on your application's requirements
+#         # Ensure to save the model after making any changes
+
+#         self.status = 'accepted'
+#         self.save()
+
+
+class FriendShip(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    )
+
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_friend_requests')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
-    accepted = models.BooleanField(default=False)
 
-    class Meta:
-        unique_together = ('sender', 'receiver')
 
     def __str__(self):
-        return f"{self.sender} -> {self.receiver}"
+            return f'{self.sender.name} -> {self.receiver.name}'
+
+
+    def accept(self):
+        if self.status == 'pending':
+            self.status = 'accepted'
+            self.save()
+
+    def reject(self):
+        if self.status == 'pending':
+            self.status = 'rejected'
+            self.save()
