@@ -47,6 +47,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','*', 'ashberri-api.netlify.app', 'http
 INSTALLED_APPS = [
     'account',
     'friend',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,10 +55,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'chat',
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
 ]
+
+
+
+
+ASGI_APPLICATION = '<ashberri_server>.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

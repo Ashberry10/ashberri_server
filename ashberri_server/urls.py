@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from chat.views import SendMessageView,GetMessageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/',include('account.urls')),
     path('friend/', include('friend.urls')),
+    path('send-message/', SendMessageView.as_view(), name='send-message'),
+    # path('view-messages/', ViewMessagesView.as_view(),name='view-messages'),
+    path('get-messages/', GetMessageView.as_view(),name='get-messages')
 
 # ]
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
