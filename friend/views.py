@@ -15,17 +15,18 @@ from .serializers import FriendShipSerializer,FriendRequestSerializer
 
 
 class SendFriendRequestView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = FriendShipSerializer(data=request.data)
         if serializer.is_valid():
             receiver_name = serializer.validated_data.get('receiver').name
             # Set the sender as the logged-in user
-            serializer.save(sender=request.user)
-            return Response({'status': 'success', 'message': f"Friend request has been sent successfully to {receiver_name}"}, status=status.HTTP_201_CREATED)
+            friend_request = serializer.save(sender=request.user)
+            return Response({'status': 'success', 'message': f"Friend request has been sent successfully to {receiver_name}", 'friend_request_id': friend_request.id}, status=status.HTTP_201_CREATED)
         else:
             errors = serializer.errors
             return Response({'status': 'error', 'message': 'Failed to send friend request', 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 
