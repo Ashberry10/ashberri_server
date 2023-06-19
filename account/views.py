@@ -213,15 +213,20 @@ class UserProfileView(APIView):
         friend_requests = FriendShip.objects.filter(receiver=user)
         friend_requests_serializer = FriendShipSerializer(friend_requests, many=True)
 
+        friend_requests_data = []
+        for friend_request in friend_requests:
+            sender_data = {
+                'id': friend_request.sender.id,
+                'name': friend_request.sender.name,  # Assuming the sender model has a "name" field
+            }
+            friend_requests_data.append(sender_data)
+
         response_data = {
             'user_profile': serializer.data,
-            'friend_requests': friend_requests_serializer.data
+            'friend_requests': friend_requests_data
         }
 
         return Response(response_data)
-
-
-
 # class UserChangePassword(APIView):
 #     renderer_classes = [UserRenderer]
 #     permission_classes = [IsAuthenticated]

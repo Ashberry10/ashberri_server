@@ -17,7 +17,6 @@ urlpatterns = [
     path('accept_or_reject_friendrequest/', AcceptOrRejectFriendRequestAPIView.as_view(), name='accept_friend_request'),
     path('unfriend/', UnfriendAPIView.as_view(), name='unfriend'),
     path('cancel-friend-request/<int:request_id>/', CancelFriendRequestAPIView.as_view(), name='cancel-friend-request'),
-    
     # path('friend_request_accept/<friend_request_id>/', accept_friend_request, name='friend-request-accept'),
     # path('friend_request_decline/<friend_request_id>/', decline_friend_request, name='friend-request-decline'),
  ]
