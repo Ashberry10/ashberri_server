@@ -92,8 +92,8 @@ class ModelapiView(APIView):
 
              Result.update({'FriendName': friendname}) 
             
-             Result.update({'Compatiblity': predicted_class})  
- 
+             Result.update({'Compatibility': predicted_class})  
+
          elif prediction[0] == 3:
              predicted_class = '* * *'
              Result.update({'id': id}) 
@@ -101,7 +101,7 @@ class ModelapiView(APIView):
 
              Result.update({'FriendName': friendname}) 
              
-             Result.update({'Compatiblity': predicted_class}) 
+             Result.update({'Compatibility': predicted_class}) 
          elif prediction[0] == 4:
              predicted_class = '* * * *'  
              Result.update({'id': id}) 
@@ -109,7 +109,7 @@ class ModelapiView(APIView):
 
              Result.update({'FriendName': friendname}) 
              
-             Result.update({'Compatiblity': predicted_class}) 
+             Result.update({'Compatibility': predicted_class}) 
  
          elif prediction[0] == 5:
              predicted_class = '* * * * *'
@@ -118,7 +118,7 @@ class ModelapiView(APIView):
 
              Result.update({'FriendName': friendname}) 
              
-             Result.update({'Compatiblity': predicted_class})   
+             Result.update({'Compatibility': predicted_class})   
          Response.append(Result) 
 
          return JsonResponse(
@@ -174,7 +174,7 @@ class ModelapiView(APIView):
 
             Result.update({'FriendName': friendname}) 
             
-            Result.update({'Compatiblity': predicted_class})  
+            Result.update({'Compatibility': predicted_class})  
  
          elif prediction[0] == 3:
              predicted_class = '* * *'
@@ -183,7 +183,7 @@ class ModelapiView(APIView):
 
              Result.update({'FriendName': friendname}) 
              
-             Result.update({'Compatiblity': predicted_class}) 
+             Result.update({'Compatibility': predicted_class}) 
          elif prediction[0] == 4:
              predicted_class = '* * * *'  
              Result.update({'id': id}) 
@@ -191,7 +191,7 @@ class ModelapiView(APIView):
 
              Result.update({'FriendName': friendname}) 
              
-             Result.update({'Compatiblity': predicted_class}) 
+             Result.update({'Compatibility': predicted_class}) 
  
          elif prediction[0] == 5:
              predicted_class = '* * * * *'
@@ -200,7 +200,7 @@ class ModelapiView(APIView):
 
              Result.update({'FriendName': friendname}) 
              
-             Result.update({'Compatiblity': predicted_class})   
+             Result.update({'Compatibility': predicted_class})   
          Response.append(Result) 
       
           
