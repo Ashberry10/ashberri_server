@@ -36,6 +36,29 @@ class SendFriendRequestView(APIView):
             errors = serializer.errors
             return Response({'status': 'error', 'message': 'Failed to send friend request', 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
+class CancelFriendRequestAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        serializer = FriendShipSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            receiver = serializer.validated_data.get('receiver')
+
+            friend_request = FriendShip.objects.filter(receiver=receiver.id, sender=request.user).first()
+
+            if friend_request:
+                friend_request.delete()
+                return Response({'message': 'Friend request canceled successfully.'}, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'message': 'Friend request not found.'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
 class AcceptOrRejectFriendRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -111,23 +134,4 @@ class UnfriendAPIView(APIView):
         friendShip.delete()
         
         return Response({'message': 'Unfriended successfully.'}, status=status.HTTP_200_OK)
-
-class CancelFriendRequestAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def delete(self, request):
-        serializer = FriendShipSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            receiver = serializer.validated_data.get('receiver')
-
-            friend_request = FriendShip.objects.filter(receiver=receiver.id, sender=request.user).first()
-
-            if friend_request:
-                friend_request.delete()
-                return Response({'message': 'Friend request canceled successfully.'}, status=status.HTTP_204_NO_CONTENT)
-            else:
-                return Response({'message': 'Friend request not found.'}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
