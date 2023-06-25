@@ -1,7 +1,9 @@
 
 # from account.views import UserPasswordResetView,UserRegistrationView,SendPasswordResetEmailView,UserLoginView,AllStudents,UserProfileView,UserChangePassword
+# from account.modelapiview import ModelapiView, FriendStatusAndCompatibilityAPIView,FriendStatusAndCompatibilitByIdAPIView
 from account.views import UserLoginView,UserRegistrationView,AllUser,UserProfileView,UpdateUser,UserDeleteView
-from account.modelapiview import ModelapiView
+from account.modelapiview import  FriendStatusAndCompatibility,FriendStatusAndCompatibilityById
+
 from  account import views
 from django.urls import path,include
 
@@ -16,8 +18,13 @@ urlpatterns = [
     # path('getalluserswithcomp/', AllUserwithComp.as_view(),name='getalluserswithcomp'),
     # path('profile/<user_id>', UserProfileView.as_view(), name='profile'),
     path('profile/', UserProfileView.as_view(), name='profile'),
-    path('Modelapi/',ModelapiView.as_view(), name='ModelapiView'),
-    path('Modelapi/<int:id>',ModelapiView.as_view(),name='ModelapiView'),
+    # path('Modelapi/',ModelapiView.as_view(), name='ModelapiView'),
+    # path('Modelapi/<int:id>',ModelapiView.as_view(),name='ModelapiView'),
+    path('friendStatusAndCompatibility/', FriendStatusAndCompatibility.as_view(), name='friend_status_and_compatibility'),
+    # path('friendStatusAndCompatibilitById/<int:id>', FriendStatusAndCompatibilityById.as_view(), name='friendStatusAndCompatibilitById'),
+    path('friendStatusAndCompatibilityById/', FriendStatusAndCompatibilityById.as_view(), name='friendStatusAndCompatibilitById'),
+
+
     path('deleteuser/<int:id>', UserDeleteView.as_view(), name='user-delete'),
     # path('course/<int:courseid>' ,views.courseDetails),
 
