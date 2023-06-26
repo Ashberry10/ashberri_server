@@ -4,6 +4,13 @@ FROM python:3.11-slim
 # Set the working directory to /app
 WORKDIR /app
 
+RUN pip install psycopg2-binary
+
+# 1 RUN apt-get update && apt-get install -y libpq-dev #optional for the psycopg
+
+# Install psycopg2 binary 
+# RUN pip install psycopg2-binary
+
 # Copy the requirements file into the container at /app
 COPY requirements.txt .
 
