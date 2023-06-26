@@ -1,2 +1,8 @@
-#get all user
-GET http://127.0.0.1:8000/api/user/getallusers/
+### Variables ###
+
+@baseUrl = http://127.0.0.1:8000
+
+#@baseUrl = https://ashberri-api.onrender.com/
+
+### Home
+GET {{baseUrl}}
