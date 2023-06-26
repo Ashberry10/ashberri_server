@@ -73,9 +73,9 @@ CHANNEL_LAYERS = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -267,16 +267,19 @@ PASSWORD_RESET_TIMEOUT=900          # 900 Sec = 15 Min
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    'https://ashberri-api.onrender.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    'https://ashberri-api.onrender.com',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    'https://ashberri-api.onrender.com',
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
