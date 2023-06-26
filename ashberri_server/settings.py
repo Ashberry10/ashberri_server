@@ -115,17 +115,31 @@ WSGI_APPLICATION = 'ashberri_server.wsgi.application'
 # }
 
 
+# diploy postgrace
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ixpkqnxs',
+#         'USER': 'ixpkqnxs',
+#         'PASSWORD': 'P0paml2qddHCF5oaERbiR22tD5NrcwU6',
+#         'HOST': 'lallah.db.elephantsql.com',
+#         'PORT': '5432',
+#     }
+# }
 
+
+# postgrace in pc
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ixpkqnxs',
-        'USER': 'ixpkqnxs',
-        'PASSWORD': 'P0paml2qddHCF5oaERbiR22tD5NrcwU6',
-        'HOST': 'lallah.db.elephantsql.com',
+        'NAME': 'newdb',
+        'USER': 'pgaman',
+        'PASSWORD': 'kumar@321',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
+
 
 
 

@@ -1,5 +1,5 @@
 from django.urls import path
-from account.modelapiview import ModelapiView
+# from account.modelapiview import ModelapiView
 from  account import views
 from django.urls import path,include
 
@@ -17,6 +17,7 @@ urlpatterns = [
     path('accept_or_reject_friendrequest/', AcceptOrRejectFriendRequestAPIView.as_view(), name='accept_friend_request'),
     path('unfriend/', UnfriendAPIView.as_view(), name='unfriend'),
     path('cancel-friend-request/', CancelFriendRequestAPIView.as_view(), name='cancel-friend-request'),
+    # path('friend-requests-status/',  GetAllUserFriendStatusAPIView.as_view(), name='get_all_user_friend_status'),
     # path('friend_request_accept/<friend_request_id>/', accept_friend_request, name='friend-request-accept'),
     # path('friend_request_decline/<friend_request_id>/', decline_friend_request, name='friend-request-decline'),
  ]

@@ -3,7 +3,9 @@ import json
 # Create your views here.
 from account.models import UserManager,User
 from friend.models import  FriendShip
-
+from rest_framework.generics import RetrieveAPIView
+from django.db.models import Q
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -11,7 +13,7 @@ from account.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .serializers import FriendShipSerializer,FriendRequestSerializer
+from .serializers import FriendShipSerializer,FriendRequestSerializer,FriendShipStatusSerializer
 
 
 class SendFriendRequestView(APIView):
@@ -134,4 +136,45 @@ class UnfriendAPIView(APIView):
         friendShip.delete()
         
         return Response({'message': 'Unfriended successfully.'}, status=status.HTTP_200_OK)
+
+
+
+
+
+
+# class GetAllUserFriendStatusAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         user = request.user
+#         users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
+
+#         friend_statuses = []
+#         for friend in users:
+#             friendship = FriendShip.objects.filter(
+#                 (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
+#             ).first()
+#             friend_id = friend.id
+#             friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
+#             friend_name = friend.name  # Get the friend's name
+
+#             if friendship:
+#                 if friendship.status == 'accepted':
+#                     friend_status = 'We Are Friends'
+#                 else:
+#                     friend_status = 'Pending'
+
+#             friend_status_data = {
+#                 'friend_id': friend_id,
+#                 'friend_name': friend_name,
+#                 'friend_status': friend_status,
+#             }
+#             friend_statuses.append(friend_status_data)
+
+   
+#         return Response(friend_statuses, status=status.HTTP_200_OK)
+
+
+
+
 
