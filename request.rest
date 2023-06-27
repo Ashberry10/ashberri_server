@@ -1,8 +1,17 @@
 ### Variables ###
 
-@baseUrl = http://127.0.0.1:8000
+#@baseUrl = http://127.0.0.1:8000
 
-#@baseUrl = https://ashberri-api.onrender.com/
+@baseUrl = https://ashberri-api.onrender.com/
 
 ### Home
 GET {{baseUrl}}
+
+### Loging
+POST  {{baseUrl}}/account/login/
+Content-Type: application/json
+
+{
+  "email": "ashish@gmail.com",
+  "password": "admin"
+}
