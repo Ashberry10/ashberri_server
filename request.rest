@@ -15,3 +15,7 @@ Content-Type: application/json
   "email": "ashish@gmail.com",
   "password": "admin"
 }
+
+###List of all user
+
+GET {{baseUrl}}/account/getallusers/
