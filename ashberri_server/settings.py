@@ -14,6 +14,12 @@ import os
 
 from datetime import timedelta
 from pathlib import Path
+
+import firebase_admin
+from firebase_admin import credentials
+
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,7 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
-
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate(BASE_DIR / 'photos-798d6-firebase-adminsdk-du390-87d6686763.json')
+firebase_admin.initialize_app(cred)
 
 
 
