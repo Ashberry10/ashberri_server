@@ -229,24 +229,30 @@ model = joblib.load('./ABmodel.joblib')
 
 
 
+
+
+
 # Alluser FriendStatusAndCompatibilityAPI
+
 class FriendStatusAndCompatibility(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        
-        loged_in_user = request.user
-        loged_in_serializer = UserProfileSerializer(loged_in_user)
-        loged_in_user_name = loged_in_serializer.data['name']
-        c_first = loged_in_serializer.data['C_second']
-        d_first = loged_in_serializer.data['D_second']
+        logged_in_user = request.user
+        logged_in_serializer = UserProfileSerializer(logged_in_user)
+        logged_in_user_name = logged_in_serializer.data['name']
+        logged_in_user_id = logged_in_serializer.data['id']
 
-        list_of_users = User.objects.all()
+        c_first = logged_in_serializer.data['C_second']
+        d_first = logged_in_serializer.data['D_second']
+        list_of_users = User.objects.exclude(id=logged_in_user.id)  # Exclude the logged-in user from the queryset
         list_of_users_serializer = GetallUserSeriailzer(list_of_users, many=True)
         json_data = JSONRenderer().render(list_of_users_serializer.data)
         users_data = json.loads(json_data)
 
         result = []
+
+
 
         for user_data in users_data:
             result_item = {}
@@ -257,30 +263,29 @@ class FriendStatusAndCompatibility(APIView):
 
             prediction = model.predict([[d_first, c_first, c_second, d_second]])
 
-            friend_status = self.get_friend_status(loged_in_user, id)
-
             result_item.update({'id': id})
-            result_item.update({'ProfileName': loged_in_user_name})
-            result_item.update({'FriendName': friend_name})
-            result_item.update({'FriendStatus': friend_status})
-            result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
+            if logged_in_user_name != friend_name:  # Only include friend name if it is not the logged-in user
+                # result_item.update({'FriendName': friend_name})
+                result_item.update({'ProfileName': friend_name})
+            if logged_in_user_name != friend_name:  # Only include compatibility if it is not the logged-in user
+                result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
 
             result.append(result_item)
 
+
+
+                # Add logged-in user's profile
+        result_item = {}
+        # id = user_data['id']
+        result_item.update({'id': logged_in_user_id})
+        result_item.update({'ProfileName': logged_in_user_name})
+        # result_item.update({'FriendName': logged_in_user_name})
+        result_item.update({'Compatibility': 'Self'})  # Indicate it's the logged-in user
+        result.append(result_item)
         return JsonResponse(result, safe=False)
 
-    def get_friend_status(self, user, id):
-        friendship = FriendShip.objects.filter(
-            (Q(sender=user) & Q(receiver=id)) | (Q(sender=id) & Q(receiver=user))
-        ).first()
 
-        if friendship:
-            if friendship.status == 'accepted':
-                return 'We Are Friends'
-            else:
-                return 'Pending'
-        else:
-            return 'Friend Request Not Sent'
+
 
     def get_compatibility_label(self, prediction):
         if prediction == 0:
@@ -291,7 +296,6 @@ class FriendStatusAndCompatibility(APIView):
             return '* * * *'
         elif prediction[0] == 5:
             return '* * * * *'
-
 
 
 
@@ -339,8 +343,7 @@ class FriendStatusAndCompatibilityById(APIView):
             friend_status = self.get_friend_status(loged_in_user, id)
 
             result_item.update({'id': id})
-            result_item.update({'ProfileName': loged_in_user_name})
-            result_item.update({'FriendName': friend_name})
+            result_item.update({'ProfileName': friend_name})
             result_item.update({'FriendStatus': friend_status})
             result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
 
@@ -368,8 +371,8 @@ class FriendStatusAndCompatibilityById(APIView):
         friend_status = self.get_friend_status(loged_in_user, friend.id)
         result_item = {}
         result_item.update({'id': id})
-        result_item.update({'ProfileName': loged_in_user_name})
-        result_item.update({'FriendName': friend_name})
+        # result_item.update({'ProfileName': loged_in_user_name})
+        result_item.update({'ProfileName': friend_name})
         result_item.update({'FriendStatus': friend_status})
         result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
 
@@ -400,6 +403,7 @@ class FriendStatusAndCompatibilityById(APIView):
             return '* * * *'
         elif prediction[0] == 5:
             return '* * * * *'
+
 
 
 
