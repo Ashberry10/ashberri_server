@@ -304,81 +304,49 @@ class FriendStatusAndCompatibility(APIView):
 
 
 # API FOR GET FriendStatusAndCompatibilit By Id
-
 class FriendStatusAndCompatibilityById(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         id = request.query_params.get('id')
         # id = request.data.get('id')
-        
+
         if id:
             return self.get_friend_status_and_compatibility_by_id(request, id)
         else:
-            return self.get_all_friend_status_and_compatibility(request)
-        
-    def get_all_friend_status_and_compatibility(self, request):
-        loged_in_user = request.user
-        loged_in_serializer = UserProfileSerializer(loged_in_user)
-        loged_in_user_name = loged_in_serializer.data['name']
-        c_first = loged_in_serializer.data['C_second']
-        d_first = loged_in_serializer.data['D_second']
-
-        list_of_users = User.objects.all()
-        list_of_users_serializer = GetallUserSeriailzer(list_of_users, many=True)
-        json_data = JSONRenderer().render(list_of_users_serializer.data)
-        users_data = json.loads(json_data)
-
-        result = []
-
-        for user_data in users_data:
-            result_item = {}
-            d_second = user_data['D_second']
-            c_second = user_data['C_second']
-            friend_name = user_data['name']
-            id = user_data['id']
-
-            prediction = model.predict([[d_first, c_first, c_second, d_second]])
-
-            friend_status = self.get_friend_status(loged_in_user, id)
-
-            result_item.update({'id': id})
-            result_item.update({'ProfileName': friend_name})
-            result_item.update({'FriendStatus': friend_status})
-            result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
-
-            result.append(result_item)
-
-        return JsonResponse(result, safe=False)
+            return Response({'error': 'Missing User ID.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_friend_status_and_compatibility_by_id(self, request, id):
         try:
             friend = User.objects.get(id=id)
         except User.DoesNotExist:
-            return Response({'error': 'Friend does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         loged_in_user = request.user
-        loged_in_serializer = UserProfileSerializer(loged_in_user)
-        loged_in_user_name = loged_in_serializer.data['name']
-        c_first = loged_in_serializer.data['C_second']
-        d_first = loged_in_serializer.data['D_second']
-
+        logged_in_serializer = UserProfileSerializer(loged_in_user)
+        logged_in_user_name = logged_in_serializer.data['name']
+        c_first = logged_in_serializer.data['C_second']
+        d_first = logged_in_serializer.data['D_second']
+        logged_in_user_id = logged_in_serializer.data['id']
         friend_serializer = UserProfileSerializer(friend)
         friend_name = friend_serializer.data['name']
         result = []
         prediction = model.predict([[d_first, c_first, friend_serializer.data['C_second'], friend_serializer.data['D_second']]])
 
         friend_status = self.get_friend_status(loged_in_user, friend.id)
-        result_item = {}
-        result_item.update({'id': id})
-        # result_item.update({'ProfileName': loged_in_user_name})
-        result_item.update({'ProfileName': friend_name})
-        result_item.update({'FriendStatus': friend_status})
-        result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
-
-      
-        result.append(result_item)
-
+        
+        if logged_in_user_id != friend.id:
+            result_item = {}
+            result_item.update({'ProfileName': friend_name})
+            result_item.update({'FriendStatus': friend_status})
+            result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
+            result.append(result_item)
+        else:
+            result_item = {}
+            result_item.update({'id': logged_in_user_id})
+            result_item.update({'ProfileName': logged_in_user_name})
+            result.append(result_item)
+            
         return JsonResponse(result, safe=False)
 
     def get_friend_status(self, user, id):
@@ -403,8 +371,6 @@ class FriendStatusAndCompatibilityById(APIView):
             return '* * * *'
         elif prediction[0] == 5:
             return '* * * * *'
-
-
 
 
 
