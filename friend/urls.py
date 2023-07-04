@@ -5,7 +5,7 @@ from django.urls import path,include
 
 
 
-from friend.views import SendFriendRequestView,ViewAllFriendRequestAPIView,AcceptOrRejectFriendRequestAPIView,UnfriendAPIView,CancelFriendRequestAPIView,GetAllUserFriendStatusAPIView
+from friend.views import SendFriendRequestView,ViewAllFriendRequestAPIView,AcceptOrRejectFriendRequestAPIView,UnfriendAPIView,CancelFriendRequestAPIView,GetAllUserFriendStatusAPIView,FriendRequestAPIView
 
 
 urlpatterns = [
@@ -18,6 +18,7 @@ urlpatterns = [
     path('unfriend/', UnfriendAPIView.as_view(), name='unfriend'),
     path('cancel-friend-request/', CancelFriendRequestAPIView.as_view(), name='cancel-friend-request'),
     path('friend-requests-status/',  GetAllUserFriendStatusAPIView.as_view(), name='get_all_user_friend_status'),
+    path('friend-request/', FriendRequestAPIView.as_view(), name='friend-request'),
     # path('friend_request_accept/<friend_request_id>/', accept_friend_request, name='friend-request-accept'),
     # path('friend_request_decline/<friend_request_id>/', decline_friend_request, name='friend-request-decline'),
  ]

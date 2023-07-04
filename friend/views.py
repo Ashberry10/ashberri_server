@@ -16,6 +16,105 @@ from account.serializers import UserProfileSerializer
 from .serializers import FriendShipSerializer,FriendRequestSerializer,FriendShipStatusSerializer
 
 
+
+class FriendRequestAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = FriendShipSerializer(data=request.data)
+        if serializer.is_valid():
+            receiver = serializer.validated_data.get('receiver')
+            receiver_name = receiver.name  # Assuming `name` is a field in the receiver model
+            logged_in_user = request.user
+
+            # Check if a friend request already exists
+            friend_request = FriendShip.objects.filter(receiver=receiver, sender=logged_in_user).first()
+
+            if friend_request:
+                return Response({'status': 'error', 'message': 'Friend request already sent.'}, status=status.HTTP_409_CONFLICT)
+
+            # Set the sender as the logged-in user and create the friend request
+            friend_request = serializer.save(sender=logged_in_user)
+
+
+            return Response({
+                'status': 'success',
+                'message': f"Friend request has been sent successfully to {receiver_name}",
+                'friend_request_id': friend_request.id,
+                'receiver': receiver.id,
+            }, status=status.HTTP_201_CREATED)
+        else:
+            errors = serializer.errors
+            return Response({'status': 'error', 'message': 'Failed to send friend request', 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        serializer = FriendShipSerializer(data=request.data)
+
+        if serializer.is_valid():
+            logged_in_user = request.user
+            receiver = serializer.validated_data.get('receiver')
+            receiver_name = receiver.name  # Assuming `name` is a field in the receiver model
+
+            friend_request = FriendShip.objects.filter(receiver=receiver, sender=request.user).first()
+
+            if friend_request:
+                friend_request.delete()
+                # return Response({'message': 'Friend request canceled successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
+
+                return Response({
+                'status': 'success',
+                'message': f"Friend request canceled successfully to {receiver_name}",
+                'friend_request_id': friend_request.id,
+                'receiver': receiver.id,
+            }, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'message': 'Friend request not found.'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        user = request.user
+        users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
+
+        friend_statuses = []
+        for friend in users:
+            friendship = FriendShip.objects.filter(
+                (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
+            ).first()
+            friend_id = friend.id
+            friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
+            friend_name = friend.name  # Get the friend's name
+
+            if friendship:
+                if friendship.status == 'accepted':
+                    friend_status = 'We Are Friends'
+                else:
+                    friend_status = 'Pending'
+
+            friend_status_data = {
+                'friend_id': friend_id,
+                'friend_name': friend_name,
+                'friend_status': friend_status,
+            }
+            friend_statuses.append(friend_status_data)
+
+   
+        return Response(friend_statuses, status=status.HTTP_200_OK)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class SendFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -162,6 +261,7 @@ class UnfriendAPIView(APIView):
 
 
 
+
 class GetAllUserFriendStatusAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -193,8 +293,3 @@ class GetAllUserFriendStatusAPIView(APIView):
 
    
         return Response(friend_statuses, status=status.HTTP_200_OK)
-
-
-
-
-
