@@ -29,8 +29,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate(BASE_DIR / 'photos-798d6-firebase-adminsdk-du390-87d6686763.json')
-firebase_admin.initialize_app(cred)
+# cred = credentials.Certificate('firebaseKey.json')
+# firebase_admin.initialize_app(cred)
 
 
 

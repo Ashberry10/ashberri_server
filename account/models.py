@@ -198,7 +198,13 @@ class User(AbstractBaseUser):
 def user_save(sender, instance, **kwargs):
     FriendList.objects.get_or_create(user=instance)
 
+#User Post Model
+class UserPost(models.Model):
+   url = models.URLField()
+   created_at = models.DateTimeField(auto_now_add=True)
 
+   def __str__(self):
+      return self.url
 
 # #models to review
 # class User(models.Model):

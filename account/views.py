@@ -1,8 +1,9 @@
+import mimetypes
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from account.serializers import UpdateUserSeriailzer, UserRegistrationSerializer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer
+from account.serializers import UpdateUserSeriailzer, UserPostSerializer, UserRegistrationSerializer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer
 from friend.serializers import FriendShipSerializer
 from django.contrib.auth import authenticate
 from .models import User
@@ -11,6 +12,9 @@ from django.http import HttpResponse
 from rest_framework_simplejwt.tokens import RefreshToken
 from account.renderers import UserRenderer
 from rest_framework.permissions import IsAuthenticated
+import firebase_admin 
+from firebase_admin import storage
+from firebase_admin import credentials
 import joblib # from django_filters.rest_framework import DjangoFilterBackend
 from friend.models import FriendShip # from rest_framework import generics
 print('inside views.py')
@@ -65,14 +69,54 @@ class UserLoginView(APIView):
                 return Response({'errors':{'non_field_errors':['Email or Password-- is not Valid']}},status=status.HTTP_404_NOT_FOUND)
             
 class uploadPost(APIView):
-   print('inside upload class')
-   def post(self,request):
-       try:
-        print('hi inside post upload')
-        return Response({'message':'Post upladed'})
-       except:
-        raise APIException('Error uploading the post')
+    print('inside upload class')
+    def post(self,request):
+        try:
+            print('hi inside post upload')
+            print(request.data)
+            serializer = UserPostSerializer(data=request.data)
+            if serializer.is_valid():
+                print('serializer is valid ')
+                print('function call start')
+                image_url = self.upload_to_firebase(request.data['image'])
+                print('function call ends')
+                print('image url',image_url)
+                serializer.save(url=image_url)
+            else:
+                print('serializer is not valid')
+            return Response({'message':'Post upladed'})
+        except:
+            raise APIException('Error uploading the post')
 
+    def get(self, request):
+        image_urls = self.get_all_image_urls()
+        return Response(image_urls)
+    
+    def upload_to_firebase(self, image):
+        print(image)
+        print('inside upload to firebase started')
+        cred = credentials.Certificate('firebaseKey.json')
+        firebase_admin.initialize_app(cred, {
+        'storageBucket': 'photos-798d6.appspot.com'
+        })
+        print(image)
+        bucket = storage.bucket()
+        file_path = f'images/{image.name}'
+        blob = bucket.blob(file_path)
+        # Set the content type of the file based on its extension
+        content_type, _ = mimetypes.guess_type(image.name)
+        blob.content_type = content_type
+
+        blob.upload_from_file(image.file)
+        url = blob.public_url
+        # If the public URL is not available, construct it manually
+        if not url:
+            url = 'no public url'#f'https://storage.googleapis.com/{bucket.name}/images/{image.name}'
+
+        return url
+
+    def get_all_image_urls(self):
+        return 'ji'
 
 class UserProfileView(APIView):
     renderer_classes = [UserRenderer]
