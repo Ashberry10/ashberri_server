@@ -1,8 +1,8 @@
 ### Variables ###
 
-#@baseUrl = http://127.0.0.1:8000
-
-@baseUrl = https://ashberri-api.onrender.com/
+@baseUrl = http://127.0.0.1:8000
+#@baseUrl = http://154.41.254.253:8000/
+#@baseUrl = https://ashberri-api.onrender.com/
 
 ### Home
 GET {{baseUrl}}
@@ -19,3 +19,6 @@ Content-Type: application/json
 ###List of all user
 
 GET {{baseUrl}}/account/getallusers/
+
+### User Profile (loged in)
+GET {{baseUrl}}/account/profile/
