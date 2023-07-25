@@ -21,14 +21,14 @@ class UserModelAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserModelAdmin
     # that reference specific fields on auth.User.
-    list_display = ('id','email', 'name', 'is_admin','day', 'month', 'year','file')
+    list_display = ('id','email', 'name', 'is_admin','day', 'month', 'year','file','gender',)
     # list_display = ('id','email', 'name','tc','Dfirst','Cfirst', 'is_admin','date_of_birth')
 
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
  
-        ('Personal info', {'fields': ('name','day','month','year')}),
+        ('Personal info', {'fields': ('name','day','month','year','gender',)}),
         # ('Personal info', {'fields': ('name','tc','Dfirst','Cfirst','date_of_birth')}),
 
 
@@ -39,7 +39,7 @@ class UserModelAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-              'fields': ('email', 'name',),
+              'fields': ('email', 'name','gender',),
             # 'fields': ('email', 'name','file','day', 'month', 'year','password',),
             # 'fields': ('email', 'name','tc','date_of_birth','Cfirst','Dfirst', 'password1', 'password2'),
 # 

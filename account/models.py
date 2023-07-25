@@ -14,7 +14,7 @@ from django.db.models.signals import post_save
 # args = ap.parse_args()
 class UserManager(BaseUserManager):
     # def create_user(self, email,name,tc, Dfirst,Cfirst,date_of_birth,password=None,password2=None):
-    def create_user(self, email,name,day,month,year,password=None):
+    def create_user(self, email,name,day,month,year,gender,password=None):
     # def create_user(self, email,name,date_of_birth,password=None):
 
 
@@ -31,6 +31,7 @@ class UserManager(BaseUserManager):
             day=day,
             month=month,
             year=year,
+            gender= gender,
             # D_second=D_second,
             # C_second=C_second,
             # C_first=C_first,
@@ -68,12 +69,16 @@ class UserManager(BaseUserManager):
         return user
 
 
+
+
 class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='Email',
         max_length=255,
         unique=True,
     )
+    
+ 
     name= models.CharField(max_length=200)
  
     # D_first= models.IntegerField(default=0)
@@ -93,6 +98,7 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManager()
+    gender = models.CharField(max_length=10, choices=[('male', 'male'), ('female', 'female'),('other', 'other')])
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
