@@ -277,23 +277,22 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     "http://127.0.0.1:3000",
     'https://ashberri-api.onrender.com',
+    "http://www.ashberri.in",
+    "http://223.235.84.152",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     "http://127.0.0.1:3000",
     'https://ashberri-api.onrender.com',
+    "http://www.ashberri.in",
+    "http://223.235.84.152",
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     'https://ashberri-api.onrender.com',
+    "http://www.ashberri.in",
+    "http://223.235.84.152",
 ]
 CORS_ALLOW_ALL_ORIGINS = True
-
-
-
-
-
-
-
