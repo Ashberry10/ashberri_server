@@ -281,6 +281,8 @@ CORS_ORIGIN_WHITELIST = [
     "http://223.235.84.152",
     "http://www.ashberri.in:3000",
     "http://223.235.84.152:3000",
+    "https://www.ashberri.in",
+    "https://223.235.84.152",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -291,6 +293,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://223.235.84.152",
     "http://www.ashberri.in:3000",
     "http://223.235.84.152:3000",
+    "https://www.ashberri.in",
+    "https://223.235.84.152",
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -300,5 +304,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://223.235.84.152",
     "http://www.ashberri.in:3000",
     "http://223.235.84.152:3000",
+    "https://www.ashberri.in",
+    "https://223.235.84.152",
 ]
 CORS_ALLOW_ALL_ORIGINS = True
