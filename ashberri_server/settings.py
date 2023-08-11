@@ -146,6 +146,17 @@ DATABASES = {
 #     }
 # }
 
+# postgrace in pc
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ashberridb',
+#         'USER': 'ashberri',
+#         'PASSWORD': '123',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 
 
