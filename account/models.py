@@ -70,7 +70,7 @@ class UserManager(BaseUserManager):
 
 
 
-
+#User model
 class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='Email',

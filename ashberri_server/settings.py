@@ -25,6 +25,10 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# store media .py
+MEDIA_URL = '/media/'  # The base URL for media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # The local filesystem path where media files are stored
+
 
 # Initialize Firebase Admin SDK
 # cred = credentials.Certificate('firebaseKey.json')

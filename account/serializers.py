@@ -75,7 +75,6 @@ class GetallUserSeriailzer(serializers.ModelSerializer):
 class UpdateUserSeriailzer(serializers.ModelSerializer):
   class Meta:
     model = User
-    # fields = [ 'email', 'name','day','year','month']
     file = serializers.ImageField(max_length=None, allow_empty_file=False, allow_null=False, use_url=True, required=False)
     fields = [ 'email', 'name','day','year','month','file']
 
