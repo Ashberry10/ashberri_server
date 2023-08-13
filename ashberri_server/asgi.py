@@ -8,10 +8,17 @@ https://docs.djangoproject.com/en/3.0/howto/deployment/asgi/
 """
 
 import os
-from .routing import application
-
 from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from .routing import application as websocket_application  # Import the websocket application from your routing module
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ashberri_server.settings')
 
-application = get_asgi_application()
+# HTTP application
+http_application = get_asgi_application()
+
+# WebSocket application
+application = ProtocolTypeRouter({
+    "http": http_application,
+    "websocket": websocket_application,
+})

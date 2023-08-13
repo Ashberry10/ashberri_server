@@ -44,7 +44,7 @@ DEBUG = True
 # DEBUG = False
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','*', 'ashberri-api.netlify.app', 'https://ashberri-api.netlify.app/']
+ALLOWED_HOSTS = ["http://www.ashberri.in",'localhost', '127.0.0.1','*', 'ashberri-api.netlify.app', 'https://ashberri-api.netlify.app/']
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
@@ -280,9 +280,15 @@ SIMPLE_JWT = {
 
 PASSWORD_RESET_TIMEOUT=900          # 900 Sec = 15 Min
 
+#deply settings
+SECURE_SSL_REDIRECT = False    # SECURE_SSL_REDIRECT Setting
+SESSION_COOKIE_SECURE = False  # SESSION_COOKIE_SECURE Setting 
+CSRF_COOKIE_SECURE = False     # CSRF_COOKIE_SECURE Setting 
+SECURE_HSTS_SECONDS = 31536000 # SECURE_HSTS_SECONDS Setting
 
 
 CORS_ORIGIN_WHITELIST = [
+    "http://0.0.0.0",
     "http://localhost:80",
     "http://127.0.0.1:80",
     "http://localhost",
@@ -294,11 +300,12 @@ CORS_ORIGIN_WHITELIST = [
     "http://223.235.84.152",
     "http://www.ashberri.in:3000",
     "http://223.235.84.152:3000",
-    "https://www.ashberri.in",
+    # "https://www.ashberri.in",
     "https://223.235.84.152",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://0.0.0.0",
     "http://localhost:80",
     "http://127.0.0.1:80",
     "http://localhost",
@@ -310,14 +317,17 @@ CSRF_TRUSTED_ORIGINS = [
     "http://223.235.84.152",
     "http://www.ashberri.in:3000",
     "http://223.235.84.152:3000",
-    "https://www.ashberri.in",
+    # "https://www.ashberri.in",
     "https://223.235.84.152",
 ]
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",  # Add the necessary origins here
+    "http://www.ashberri.in",
     "http://localhost:80",
     "http://127.0.0.1:80",
     "http://localhost",
     "http://127.0.0.1",
+    "http://0.0.0.0",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     'https://ashberri-api.onrender.com',
@@ -325,7 +335,31 @@ CORS_ALLOWED_ORIGINS = [
     "http://223.235.84.152",
     "http://www.ashberri.in:3000",
     "http://223.235.84.152:3000",
-    "https://www.ashberri.in",
+    # "https://www.ashberri.in",
     "https://223.235.84.152",
 ]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+# Django project settings.py
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+
 CORS_ALLOW_ALL_ORIGINS = True
