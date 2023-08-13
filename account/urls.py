@@ -1,5 +1,5 @@
 from account.modelapiview import FriendStatusAndCompatibility, FriendStatusAndCompatibilityById
-from account.views import AllUser, UpdateUser, UserDeleteView, UserLoginView, UserProfileView,UserRegistrationView, uploadPost
+from account.views import AllUser, UpdateUser, UserDeleteView, UserLoginView, UserProfileView,UserRegistrationView, CreatePost
 from django.urls import path
 
 
@@ -7,7 +7,7 @@ from django.urls import path
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(),name='register'),
     path('login/', UserLoginView.as_view(),name='login'),
-    path('post/upload/',uploadPost.as_view(), name='upload'),
+    path('post/upload/',CreatePost.as_view(), name='upload'),
     path('getallusers/', AllUser.as_view(),name='getallusers'),
     path('getallusers/<int:id>',AllUser.as_view()),
     path('update/',UpdateUser.as_view(), name='user_update'),
