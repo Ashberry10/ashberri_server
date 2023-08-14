@@ -3,10 +3,10 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from account.serializers import UpdateUserSeriailzer, UserPostSerializer, UserRegistrationSerializer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer
+from account.serializers import CommentSerializer, PostSerializer, UpdateUserSeriailzer, UserRegistrationSerializer,UserLoginSeriailzer,UserProfileSerializer,GetallUserSeriailzer
 from friend.serializers import FriendShipSerializer
 from django.contrib.auth import authenticate
-from .models import User
+from .models import Like, Post, Share, User
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -68,7 +68,7 @@ class UserLoginView(APIView):
             else: 
                 return Response({'errors':{'non_field_errors':['Email or Password-- is not Valid']}},status=status.HTTP_404_NOT_FOUND)
             
-class CreatePost(APIView):
+class CreatePost1(APIView):
     print('inside upload class')
     def post(self,request):
         try:
@@ -87,6 +87,53 @@ class CreatePost(APIView):
             return Response({'message':'Post upladed'})
         except:
             raise APIException('Error uploading the post')
+#Post START
+class CreatePost(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        luser = request.user 
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=luser)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class LikePost(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+        like = Like(user=request.user, post=post)
+        like.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+class SharePost(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+        share = Share(user=request.user, post=post)
+        share.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+class CommentPost(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = Post.objects.get(pk=post_id)
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, post=post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Post END
 
     def get(self, request):
         image_urls = self.get_all_image_urls()
