@@ -73,48 +73,80 @@ class FriendRequestAPIView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # def get(self, request):
+    #     user = request.user
+    #     users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
+
+    #     friend_statuses = []
+    #     for friend in users:
+    #         friendship = FriendShip.objects.filter(
+    #             (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
+    #         ).first()
+    #         friend_id = friend.id
+    #         friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
+    #         friend_name = friend.name  # Get the friend's name
+
+    #         if friendship:
+    #             if friendship.status == 'accepted':
+    #                 friend_status = 'We Are Friends'
+    #             else:
+    #                 friend_status = 'Pending'
+
+    #         friend_status_data = {
+    #             'friend_id': friend_id,
+    #             'friend_name': friend_name,
+    #             'friend_status': friend_status,
+    #         }
+    #         friend_statuses.append(friend_status_data)
+
+   
+    #     return Response(friend_statuses, status=status.HTTP_200_OK)    
+
+
+
+    
+    def get_friend_status(self, user, friend_id):
+        friendship = FriendShip.objects.filter(
+            (Q(sender=user) & Q(receiver=friend_id)) | (Q(sender=friend_id) & Q(receiver=user))
+        ).first()
+
+        if friendship:
+            if friendship.status == 'accepted':
+                return 'We Are Friends'
+            else:
+                return 'Pending'
+        else:
+            return 'Friend Request Not Sent'
+
     def get(self, request):
         user = request.user
-        users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
+        users = User.objects.exclude(id=user.id)
 
-        friend_statuses = []
+        friend_requests_with_status = []
         for friend in users:
-            friendship = FriendShip.objects.filter(
-                (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
-            ).first()
+            received_friend_request = FriendShip.objects.filter(receiver=user, sender=friend).first()
+            sent_friend_request = FriendShip.objects.filter(sender=user, receiver=friend).first()
             friend_id = friend.id
-            friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
-            friend_name = friend.name  # Get the friend's name
+            friend_name = friend.name
 
-            if friendship:
-                if friendship.status == 'accepted':
-                    friend_status = 'We Are Friends'
-                else:
-                    friend_status = 'Pending'
+            if received_friend_request:
+                friend_status = self.get_friend_status(user, friend.id)
+            elif sent_friend_request:
+                friend_status = 'Friend Request Sent'
+            else:
+                friend_status = 'Friend Request Not Sent'
 
-            friend_status_data = {
+            friend_request_data = {
                 'friend_id': friend_id,
                 'friend_name': friend_name,
                 'friend_status': friend_status,
             }
-            friend_statuses.append(friend_status_data)
+            friend_requests_with_status.append(friend_request_data)
 
-   
-        return Response(friend_statuses, status=status.HTTP_200_OK)    
-
+        return Response(friend_requests_with_status, status=status.HTTP_200_OK)
 
 
-
-
-
-
-
-
-
-
-
-
-
+    
 class SendFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -262,34 +294,34 @@ class UnfriendAPIView(APIView):
 
 
 
-class GetAllUserFriendStatusAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+# class GetAllUserFriendStatusAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        user = request.user
-        users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
+#     def get(self, request):
+#         user = request.user
+#         users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
 
-        friend_statuses = []
-        for friend in users:
-            friendship = FriendShip.objects.filter(
-                (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
-            ).first()
-            friend_id = friend.id
-            friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
-            friend_name = friend.name  # Get the friend's name
+#         friend_statuses = []
+#         for friend in users:
+#             friendship = FriendShip.objects.filter(
+#                 (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
+#             ).first()
+#             friend_id = friend.id
+#             friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
+#             friend_name = friend.name  # Get the friend's name
 
-            if friendship:
-                if friendship.status == 'accepted':
-                    friend_status = 'We Are Friends'
-                else:
-                    friend_status = 'Pending'
+#             if friendship:
+#                 if friendship.status == 'accepted':
+#                     friend_status = 'We Are Friends'
+#                 else:
+#                     friend_status = 'Pending'
 
-            friend_status_data = {
-                'friend_id': friend_id,
-                'friend_name': friend_name,
-                'friend_status': friend_status,
-            }
-            friend_statuses.append(friend_status_data)
+#             friend_status_data = {
+#                 'friend_id': friend_id,
+#                 'friend_name': friend_name,
+#                 'friend_status': friend_status,
+#             }
+#             friend_statuses.append(friend_status_data)
 
    
-        return Response(friend_statuses, status=status.HTTP_200_OK)
+#         return Response(friend_statuses, status=status.HTTP_200_OK)
