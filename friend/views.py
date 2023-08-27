@@ -13,7 +13,7 @@ from account.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from account.serializers import UserProfileSerializer
-from .serializers import FriendShipSerializer,FriendRequestSerializer,FriendShipStatusSerializer
+from .serializers import FriendShipSerializer,FriendRequestSerializer,FriendShipStatusSerializer,AcceptOrRejectFriendRequestSerializer
 
 
 
@@ -216,7 +216,7 @@ class AcceptOrRejectFriendRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = FriendShipSerializer(data=request.data)
+        serializer = AcceptOrRejectFriendRequestSerializer(data=request.data)
         
         if serializer.is_valid():
             sender = serializer.validated_data.get('sender')

@@ -5,7 +5,16 @@ class FriendShipSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendShip
         # receiver_user_id = serializers.IntegerField()
-        fields = ['sender','receiver']
+        fields = ['receiver']
+
+class AcceptOrRejectFriendRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendShip
+        # receiver_user_id = serializers.IntegerField()
+        fields = ['sender']
+
+
+
 
 
 class FriendRequestSerializer(serializers.ModelSerializer):
