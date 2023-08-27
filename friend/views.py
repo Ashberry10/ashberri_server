@@ -233,6 +233,7 @@ class AcceptOrRejectFriendRequestAPIView(APIView):
             
             if action == 'accept':
                 friend_request.accept()
+                friend_request.save()
                 return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
             elif action == 'reject':
                 friend_request.reject()
