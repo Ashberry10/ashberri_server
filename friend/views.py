@@ -86,11 +86,21 @@ class FriendRequestAPIView(APIView):
             friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
             friend_name = friend.name  # Get the friend's name
 
+            # if friendship:
+            #     if friendship.status == 'accepted':
+            #         friend_status = 'We Are Friends'
+            #     else:
+            #         friend_status = 'Pending'
+            
+
+
             if friendship:
-                if friendship.status == 'accepted':
+                if friendship.sender == user and friendship.status == 'pending':
+                    friend_status = 'Pending'  # Sender's profile shows "Pending"
+                elif friendship.receiver == user and friendship.status == 'pending':
+                    friend_status = 'Friend Request Received'  # Receiver's profile shows "Friend Request Received"
+                elif friendship.status == 'accepted':
                     friend_status = 'We Are Friends'
-                else:
-                    friend_status = 'Pending'
 
             friend_status_data = {
                 'friend_id': friend_id,
@@ -147,44 +157,7 @@ class FriendRequestAPIView(APIView):
 
 
     
-# class SendFriendRequestView(APIView):
-#     permission_classes = [IsAuthenticated]
 
-#     def post(self, request):
-#         serializer = FriendShipSerializer(data=request.data)
-#         if serializer.is_valid():
-#             receiver = serializer.validated_data.get('receiver')
-#             receiver_name = receiver.name  # Assuming `name` is a field in the receiver model
-#             loged_in_user = request.user
-
-#             # Set the sender as the logged-in user
-#             friend_request = serializer.save(sender=loged_in_user, receiver=receiver)
-          
-#             friend_status = self.get_friend_status(loged_in_user, receiver.id)
-
-#             return Response({
-#                 'status': 'success',
-#                 'message': f"Friend request has been sent successfully to {receiver_name}",
-#                 'friend_request_id': friend_request.id,
-#                 'receiver': receiver.id,
-#                 'friend_status': friend_status  # Include the friend_status in the response
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             errors = serializer.errors
-#             return Response({'status': 'error', 'message': 'Failed to send friend request', 'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
-        
-#     def get_friend_status(self, user, receiver_id):
-#         friendship = FriendShip.objects.filter(
-#             (Q(sender=user) & Q(receiver=receiver_id)) | (Q(sender=receiver_id) & Q(receiver=user))
-#         ).first()
-
-#         if friendship:
-#             if friendship.status == 'accepted':
-#                 return 'We Are Friends'
-#             else:
-#                 return 'Pending'
-#         else:
-#             return 'Friend Request Not Sent'
 
 
 
@@ -212,68 +185,68 @@ class CancelFriendRequestAPIView(APIView):
 
 
 
-# class AcceptOrRejectFriendRequestAPIView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request):
-#         serializer = AcceptOrRejectFriendRequestSerializer(data=request.data)
-        
-#         if serializer.is_valid():
-#             sender = serializer.validated_data.get('sender')
-            
-#             try:
-#                 friend_request = FriendShip.objects.get(sender=sender, receiver=request.user)
-#             except FriendShip.DoesNotExist:
-#                 return Response({'message': 'Friend request does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-            
-#             action = request.data.get('action')
-            
-#             if action == 'accept':
-#                 friend_request.accept()
-#                 friend_request.save()
-                
-
-                
-#                 return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
-#             elif action == 'reject':
-#                 friend_request.reject()
-#                 friend_request.delete() 
-#                 return Response({'message': 'Friend request rejected and deleted.'}, status=status.HTTP_200_OK)
-#             else:
-#                 return Response({'message': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class AcceptOrRejectFriendRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = FriendShipSerializer(data=request.data)
+        serializer = AcceptOrRejectFriendRequestSerializer(data=request.data)
         
         if serializer.is_valid():
-            receiver = serializer.validated_data.get('receiver')
+            sender = serializer.validated_data.get('sender')
             
             try:
-                friend_request = FriendShip.objects.get(receiver=receiver, sender=request.user)
+                friend_request = FriendShip.objects.get(sender=sender, receiver=request.user)
             except FriendShip.DoesNotExist:
                 return Response({'message': 'Friend request does not exist.'}, status=status.HTTP_404_NOT_FOUND)
             
-            # Perform any additional checks or validations here
-            
-            action = serializer.validated_data.get('action')
-            # action = request.data.get('action')
+            action = request.data.get('action')
             
             if action == 'accept':
                 friend_request.accept()
+                friend_request.save()
+                
+
+                
                 return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
             elif action == 'reject':
                 friend_request.reject()
                 friend_request.delete() 
-
-                return Response({'message': 'Friend request rejected.'}, status=status.HTTP_200_OK)
+                return Response({'message': 'Friend request rejected and deleted.'}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class AcceptOrRejectFriendRequestAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request):
+#         serializer = FriendShipSerializer(data=request.data)
+        
+#         if serializer.is_valid():
+#             receiver = serializer.validated_data.get('receiver')
+            
+#             try:
+#                 friend_request = FriendShip.objects.get(receiver=receiver, sender=request.user)
+#             except FriendShip.DoesNotExist:
+#                 return Response({'message': 'Friend request does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            
+#             # Perform any additional checks or validations here
+            
+#             action = serializer.validated_data.get('action')
+#             # action = request.data.get('action')
+            
+#             if action == 'accept':
+#                 friend_request.accept()
+#                 return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
+#             elif action == 'reject':
+#                 friend_request.reject()
+#                 friend_request.delete() 
+
+#                 return Response({'message': 'Friend request rejected.'}, status=status.HTTP_200_OK)
+#             else:
+#                 return Response({'message': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
