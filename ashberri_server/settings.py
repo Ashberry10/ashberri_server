@@ -17,7 +17,6 @@ from pathlib import Path
 
 
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -45,7 +44,6 @@ SECRET_KEY = 'h!b-!1u#894v=o0!g5wedgs^#bi8*jmr*h^jrymc70w(!usrjd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-# DEBUG = False
 
 
 ALLOWED_HOSTS = ["http://www.ashberri.in",'localhost', '127.0.0.1','*', 'ashberri-api.netlify.app', 'https://ashberri-api.netlify.app/']
@@ -85,6 +83,7 @@ CHANNEL_LAYERS = {
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware", # for css mime type error
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
