@@ -91,7 +91,7 @@ class FriendRequestAPIView(APIView):
             #         friend_status = 'We Are Friends'
             #     else:
             #         friend_status = 'Pending'
-            
+            # 
 
 
             if friendship:
