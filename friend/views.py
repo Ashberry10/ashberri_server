@@ -73,77 +73,77 @@ class FriendRequestAPIView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # def get(self, request):
-    #     user = request.user
-    #     users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
-
-    #     friend_statuses = []
-    #     for friend in users:
-    #         friendship = FriendShip.objects.filter(
-    #             (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
-    #         ).first()
-    #         friend_id = friend.id
-    #         friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
-    #         friend_name = friend.name  # Get the friend's name
-
-    #         if friendship:
-    #             if friendship.status == 'accepted':
-    #                 friend_status = 'We Are Friends'
-    #             else:
-    #                 friend_status = 'Pending'
-
-    #         friend_status_data = {
-    #             'friend_id': friend_id,
-    #             'friend_name': friend_name,
-    #             'friend_status': friend_status,
-    #         }
-    #         friend_statuses.append(friend_status_data)
-
-   
-    #     return Response(friend_statuses, status=status.HTTP_200_OK)    
-
-
-
-    
-    def get_friend_status(self, user, friend_id):
-        friendship = FriendShip.objects.filter(
-            (Q(sender=user) & Q(receiver=friend_id)) | (Q(sender=friend_id) & Q(receiver=user))
-        ).first()
-
-        if friendship:
-            if friendship.status == 'accepted':
-                return 'We Are Friends'
-            else:
-                return 'Pending'
-        else:
-            return 'Friend Request Not Sent'
-
     def get(self, request):
         user = request.user
-        users = User.objects.exclude(id=user.id)
+        users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
 
-        friend_requests_with_status = []
+        friend_statuses = []
         for friend in users:
-            received_friend_request = FriendShip.objects.filter(receiver=user, sender=friend).first()
-            sent_friend_request = FriendShip.objects.filter(sender=user, receiver=friend).first()
+            friendship = FriendShip.objects.filter(
+                (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
+            ).first()
             friend_id = friend.id
-            friend_name = friend.name
+            friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
+            friend_name = friend.name  # Get the friend's name
 
-            if received_friend_request:
-                friend_status = self.get_friend_status(user, friend.id)
-            elif sent_friend_request:
-                friend_status = 'Friend Request Sent'
-            else:
-                friend_status = 'Friend Request Not Sent'
+            if friendship:
+                if friendship.status == 'accepted':
+                    friend_status = 'We Are Friends'
+                else:
+                    friend_status = 'Pending'
 
-            friend_request_data = {
+            friend_status_data = {
                 'friend_id': friend_id,
                 'friend_name': friend_name,
                 'friend_status': friend_status,
             }
-            friend_requests_with_status.append(friend_request_data)
+            friend_statuses.append(friend_status_data)
 
-        return Response(friend_requests_with_status, status=status.HTTP_200_OK)
+   
+        return Response(friend_statuses, status=status.HTTP_200_OK)    
+
+
+
+    
+    # def get_friend_status(self, user, friend_id):
+    #     friendship = FriendShip.objects.filter(
+    #         (Q(sender=user) & Q(receiver=friend_id)) | (Q(sender=friend_id) & Q(receiver=user))
+    #     ).first()
+
+    #     if friendship:
+    #         if friendship.status == 'accepted':
+    #             return 'We Are Friends'
+    #         else:
+    #             return 'Pending'
+    #     else:
+    #         return 'Friend Request Not Sent'
+
+    # def get(self, request):
+    #     user = request.user
+    #     users = User.objects.exclude(id=user.id)
+
+    #     friend_requests_with_status = []
+    #     for friend in users:
+    #         received_friend_request = FriendShip.objects.filter(receiver=user, sender=friend).first()
+    #         sent_friend_request = FriendShip.objects.filter(sender=user, receiver=friend).first()
+    #         friend_id = friend.id
+    #         friend_name = friend.name
+
+    #         if received_friend_request:
+    #             friend_status = self.get_friend_status(user, friend.id)
+    #         elif sent_friend_request:
+    #             friend_status = 'Friend Request Sent'
+    #         else:
+    #             friend_status = 'Friend Request Not Sent'
+
+    #         friend_request_data = {
+    #             'friend_id': friend_id,
+    #             'friend_name': friend_name,
+    #             'friend_status': friend_status,
+    #         }
+    #         friend_requests_with_status.append(friend_request_data)
+
+    #     return Response(friend_requests_with_status, status=status.HTTP_200_OK)
 
 
     
@@ -208,37 +208,68 @@ class CancelFriendRequestAPIView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+  # Create a mutual friendship by adding both users to each other's friend lists
 
 
 
+# class AcceptOrRejectFriendRequestAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
 
+#     def post(self, request):
+#         serializer = AcceptOrRejectFriendRequestSerializer(data=request.data)
+        
+#         if serializer.is_valid():
+#             sender = serializer.validated_data.get('sender')
+            
+#             try:
+#                 friend_request = FriendShip.objects.get(sender=sender, receiver=request.user)
+#             except FriendShip.DoesNotExist:
+#                 return Response({'message': 'Friend request does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            
+#             action = request.data.get('action')
+            
+#             if action == 'accept':
+#                 friend_request.accept()
+#                 friend_request.save()
+                
+
+                
+#                 return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
+#             elif action == 'reject':
+#                 friend_request.reject()
+#                 friend_request.delete() 
+#                 return Response({'message': 'Friend request rejected and deleted.'}, status=status.HTTP_200_OK)
+#             else:
+#                 return Response({'message': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class AcceptOrRejectFriendRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = AcceptOrRejectFriendRequestSerializer(data=request.data)
+        serializer = FriendShipSerializer(data=request.data)
         
         if serializer.is_valid():
-            sender = serializer.validated_data.get('sender')
+            receiver = serializer.validated_data.get('receiver')
             
             try:
-                friend_request = FriendShip.objects.get(sender=sender, receiver=request.user)
+                friend_request = FriendShip.objects.get(receiver=receiver, sender=request.user)
             except FriendShip.DoesNotExist:
                 return Response({'message': 'Friend request does not exist.'}, status=status.HTTP_404_NOT_FOUND)
             
             # Perform any additional checks or validations here
             
-            # action = serializer.validated_data.get('action')
-            action = request.data.get('action')
+            action = serializer.validated_data.get('action')
+            # action = request.data.get('action')
             
             if action == 'accept':
                 friend_request.accept()
-                friend_request.save()
                 return Response({'message': 'Friend request accepted.'}, status=status.HTTP_200_OK)
             elif action == 'reject':
                 friend_request.reject()
                 friend_request.delete() 
-                return Response({'message': 'Friend request rejected and deleted.'}, status=status.HTTP_200_OK)
+
+                return Response({'message': 'Friend request rejected.'}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -296,34 +327,3 @@ class UnfriendAPIView(APIView):
 
 
 
-# class GetAllUserFriendStatusAPIView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         user = request.user
-#         users = User.objects.exclude(id=user.id)  # Exclude the current user from the list
-
-#         friend_statuses = []
-#         for friend in users:
-#             friendship = FriendShip.objects.filter(
-#                 (Q(sender=user) & Q(receiver=friend)) | (Q(sender=friend) & Q(receiver=user))
-#             ).first()
-#             friend_id = friend.id
-#             friend_status = 'Friend Request Not Sent'  # Default status if no friendship exists
-#             friend_name = friend.name  # Get the friend's name
-
-#             if friendship:
-#                 if friendship.status == 'accepted':
-#                     friend_status = 'We Are Friends'
-#                 else:
-#                     friend_status = 'Pending'
-
-#             friend_status_data = {
-#                 'friend_id': friend_id,
-#                 'friend_name': friend_name,
-#                 'friend_status': friend_status,
-#             }
-#             friend_statuses.append(friend_status_data)
-
-   
-#         return Response(friend_statuses, status=status.HTTP_200_OK)
