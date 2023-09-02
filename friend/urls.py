@@ -5,7 +5,7 @@ from django.urls import path,include
 
 
 
-from friend.views import ViewAllFriendRequestAPIView,AcceptOrRejectFriendRequestAPIView,UnfriendAPIView,CancelFriendRequestAPIView,FriendRequestAPIView,GetAllUserFriendStatusAPIView
+from friend.views import ViewAllFriendRequestAPIView,AcceptOrRejectFriendRequestAPIView,UnfriendAPIView,CancelFriendRequestAPIView,FriendRequestAPIView
 
 
 urlpatterns = [
