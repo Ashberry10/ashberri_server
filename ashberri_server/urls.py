@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/',include('account.urls')),
     path('friend/', include('friend.urls')),
+    path('post/', include('post.urls')),
     path('send-message/', SendMessageView.as_view(), name='send-message'),
     # path('view-messages/', ViewMessagesView.as_view(),name='view-messages'),
     path('get-messages/', GetMessageView.as_view(),name='get-messages')

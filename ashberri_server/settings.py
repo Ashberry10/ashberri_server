@@ -55,6 +55,7 @@ ALLOWED_HOSTS = ["http://www.ashberri.in",'localhost', '127.0.0.1','*', 'ashberr
 INSTALLED_APPS = [
     'account',
     'friend',
+    'post',
     'channels',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -156,7 +157,7 @@ DATABASES = {
         'NAME': 'ashberridb',
         'USER': 'postgres',
         'PASSWORD': '123',
-        'HOST': '127.0.0.1',
+        'HOST': '223.235.84.152', #
         'PORT': '5432',
     }
 }

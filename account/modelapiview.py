@@ -2,27 +2,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from account.serializers import UserProfileSerializer,GetallUserSeriailzer
-from django.contrib.auth import authenticate
-from rest_framework.exceptions import AuthenticationFailed
 from django.db.models import Q
 
 from django.http import JsonResponse
-from .models import UserManager,User
+from .models import User
 from rest_framework.renderers import JSONRenderer
 from friend.models import FriendShip
-from django.http import HttpResponse
-from rest_framework_simplejwt.tokens import RefreshToken
-from account.renderers import UserRenderer
 from rest_framework.permissions import IsAuthenticated
-import jwt, datetime
 # from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import render
-from django.template import Context, RequestContext
 import joblib
-import requests
 # from rest_framework import generics
 import json
-import os
 # from rest_framework import filters
 model = joblib.load('./ABmodel.joblib')
 

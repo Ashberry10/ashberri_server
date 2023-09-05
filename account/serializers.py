@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from account.models import User, UserPost, Post, Like, Share, Comment
+from account.models import User
 # from xml.dom import ValidationErr
 # from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 # from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -78,28 +78,6 @@ class UpdateUserSeriailzer(serializers.ModelSerializer):
     file = serializers.ImageField(max_length=None, allow_empty_file=False, allow_null=False, use_url=True, required=False)
     fields = [ 'email', 'name','gender','day','year','month','file']
 
-
-# post serializer START
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ['content']
-
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Like
-        fields = '__all__'
-
-class ShareSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Share
-        fields = '__all__'
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ['content']
-# post serializer END
 
 
 # class UserChangePasswordSeriailzer(serializers.Serializer):
