@@ -16,6 +16,8 @@ from account.serializers import UserProfileSerializer
 from .serializers import FriendShipSerializer,FriendRequestSerializer,FriendShipStatusSerializer,AcceptOrRejectFriendRequestSerializer
 
 
+import joblib
+model = joblib.load('./ABmodel.joblib')
 
 class FriendRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -32,6 +34,21 @@ class FriendRequestAPIView(APIView):
 
             if friend_request:
                 return Response({'status': 'error', 'message': 'Friend request already sent.'}, status=status.HTTP_409_CONFLICT)
+            #campatability start
+            logged_in_serializer = UserProfileSerializer(logged_in_user)
+            logged_in_user_name = logged_in_serializer.data['name']
+            c_first = logged_in_serializer.data['C_second']
+            d_first = logged_in_serializer.data['D_second']
+            logged_in_user_id = logged_in_serializer.data['id']
+
+            friend = User.objects.get(id=receiver.id)
+            friend_serializer = UserProfileSerializer(friend)
+            friend_name = friend_serializer.data['name']
+
+            result = model.predict([[d_first, c_first, friend_serializer.data['C_second'], friend_serializer.data['D_second']]])
+            #compatibility end
+            serializer.validated_data['compatibility'] = result
+
 
             # Set the sender as the logged-in user and create the friend request
             friend_request = serializer.save(sender=logged_in_user)
@@ -42,6 +59,7 @@ class FriendRequestAPIView(APIView):
                 'message': f"Friend request has been sent successfully to {receiver_name}",
                 'friend_request_id': friend_request.id,
                 'receiver': receiver.id,
+                'compatability': serializer.data['compatibility']
             }, status=status.HTTP_201_CREATED)
         else:
             errors = serializer.errors
