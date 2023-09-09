@@ -274,6 +274,7 @@ class ViewAllFriendRequestAPIView(APIView):
     def get(self, request):
         user_id = request.user.id
         friend_requests = FriendShip.objects.filter(receiver_id=user_id)
+        count = FriendShip.objects.filter(receiver_id=user_id).count()
         serializer = FriendRequestSerializer(friend_requests, many=True)
         serialized_data = serializer.data
 
@@ -283,14 +284,12 @@ class ViewAllFriendRequestAPIView(APIView):
             sender_name = User.objects.get(id=sender_id).name
             data['sender_name'] = sender_name
 
-        friend_request_count = len(serialized_data)
-
-        if friend_request_count == 0:
+        if count == 0:
             return Response({'message': 'No friend requests found'}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({
             'message': 'All friend requests',
-            'total_friend_requests': friend_request_count,
+            'total_friend_requests': count,
             'friend_requests': serialized_data
         }, status=status.HTTP_200_OK)
 
