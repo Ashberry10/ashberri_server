@@ -5,6 +5,7 @@ from account.models import User
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
+    image = models.ImageField(upload_to='post_photo/%Y/%m/%d', null=True,blank=True, verbose_name='post_photo')
     timestamp = models.DateTimeField(auto_now_add=True)
     
 class Like(models.Model):
