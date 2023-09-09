@@ -274,7 +274,7 @@ class ViewAllFriendRequestAPIView(APIView):
     def get(self, request):
         user_id = request.user.id
         friend_requests = FriendShip.objects.filter(receiver_id=user_id)
-        count = FriendShip.objects.filter(receiver_id=user_id).count()
+        count = FriendShip.objects.filter(receiver_id=user_id, status = 'pending').count()
         serializer = FriendRequestSerializer(friend_requests, many=True)
         serialized_data = serializer.data
 
