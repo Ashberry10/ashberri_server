@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'account',
     'friend',
     'post',
+    'customsearch',
     'channels',
     'django.contrib.admin',
     'django.contrib.auth',
