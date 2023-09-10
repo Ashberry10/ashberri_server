@@ -1,7 +1,6 @@
 from django.urls import path
 from  account import views
 from django.urls import path,include
-
 from friend.views import FriendAPIView, ViewAllFriendRequestAPIView,AcceptOrRejectFriendRequestAPIView,UnfriendAPIView,CancelFriendRequestAPIView,FriendRequestAPIView
 
 

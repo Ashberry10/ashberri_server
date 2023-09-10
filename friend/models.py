@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 
-# Create your models here......
 class FriendList(models.Model):
 
     user =  models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -57,28 +56,19 @@ class FriendShip(models.Model):
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
     )
-
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_friend_requests')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     compatibility = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
             return f'{self.sender.name} -> {self.receiver.name}'
-
 
     def accept(self):
         if self.status == 'pending':
             self.status = 'accepted'
             self.save()
-   
-
-
-
-
-
 
     def reject(self):
         if self.status == 'pending':

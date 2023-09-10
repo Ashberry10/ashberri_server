@@ -158,7 +158,7 @@ DATABASES = {
         'NAME': 'ashberridb',
         'USER': 'postgres',
         'PASSWORD': '123',
-        'HOST': '223.235.84.152', #
+        'HOST': 'localhost',#'223.235.84.152', #
         'PORT': '5432',
     }
 }
