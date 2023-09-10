@@ -260,6 +260,7 @@ class FriendStatusAndCompatibility(APIView):
             if logged_in_user_name != friend_name:  # Only include compatibility if it is not the logged-in user
                 result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
 
+
             result.append(result_item)
 
 
@@ -276,16 +277,17 @@ class FriendStatusAndCompatibility(APIView):
 
 
 
-
     def get_compatibility_label(self, prediction):
         if prediction == 0:
-            return 'Not Friend'
+            return 0
         elif prediction[0] == 3:
-            return '* * *'
+            return 3
         elif prediction[0] == 4:
-            return '* * * *'
+            return 4
         elif prediction[0] == 5:
-            return '* * * * *'
+            return 5
+
+
 
 
 
@@ -330,6 +332,8 @@ class FriendStatusAndCompatibilityById(APIView):
             result_item.update({'ProfileName': friend_name})
             result_item.update({'FriendStatus': friend_status})
             result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
+
+
             result.append(result_item)
         else:
             result_item = {}
@@ -354,13 +358,13 @@ class FriendStatusAndCompatibilityById(APIView):
 
     def get_compatibility_label(self, prediction):
         if prediction == 0:
-            return 'Not Friend'
+            return 0
         elif prediction[0] == 3:
-            return '* * *'
+            return 3
         elif prediction[0] == 4:
-            return '* * * *'
+            return 4
         elif prediction[0] == 5:
-            return '* * * * *'
+            return 5
 
 
 
