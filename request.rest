@@ -3,6 +3,7 @@
 @baseUrl = http://127.0.0.1:8000
 #@baseUrl = http://154.41.254.253:8000/
 #@baseUrl = https://ashberri-api.onrender.com/
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk0NDk2OTMzLCJpYXQiOjE2OTQzMjQxMzMsImp0aSI6IjRlZjZmMzVmMGI2ODQ3NTRiYjM3ZGMwYWZlYjYwN2UyIiwidXNlcl9pZCI6Mn0.fs6sgY0Ph7RkrEnJ9Bbg5E5BT5HHWNnXOmPdf8Btlzc
 
 ### Home
 GET {{baseUrl}}
@@ -12,7 +13,7 @@ POST  {{baseUrl}}/account/login/
 Content-Type: application/json
 
 {
-  "email": "ashish@gmail.com",
+  "email": "ash@gmail.com",
   "password": "admin"
 }
 
@@ -22,3 +23,9 @@ GET {{baseUrl}}/account/getallusers/
 
 ### User Profile (loged in)
 GET {{baseUrl}}/account/profile/
+Authorization: Bearer {{accessToken}}
+
+
+### Friend
+GET {{baseUrl}}/friend/
+Authorization: Bearer {{accessToken}}

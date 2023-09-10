@@ -1,6 +1,5 @@
 from django.shortcuts import render
 import json
-# Create your views here.
 from account.models import UserManager,User
 from friend.models import  FriendShip
 from rest_framework.generics import RetrieveAPIView
@@ -293,27 +292,34 @@ class ViewAllFriendRequestAPIView(APIView):
             'friend_requests': serialized_data
         }, status=status.HTTP_200_OK)
 
+class FriendAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        user_id = request.user.id
+        TotalFriend = FriendShip.objects.filter(receiver_id=user_id, status = 'accepted').count()
+        result = FriendShip.objects.filter(receiver_id=user_id, status = 'accepted')
+        serializer = FriendRequestSerializer(result, many=True)
+        data = serializer.data
+        
+        if TotalFriend == 0:
+            return Response({'message': 'make some founds'})
+
+        return Response({
+            'message': 'Successfull fetched list of friends',
+            'total_friend': TotalFriend,
+            'friend':data
+        },status=status.HTTP_200_OK)
 
 class UnfriendAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         receiver = request.data.get('receiver')
-        
         try:
             friendShip = FriendShip.objects.filter(sender=request.user, receiver=receiver).first() \
-                         or FriendShip.objects.filter(receiver=request.user, sender=receiver).first()
+                        or FriendShip.objects.filter(receiver=request.user, sender=receiver).first()
         except FriendShip.DoesNotExist:
             return Response({'message': 'Friendship does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        
         friendShip.delete()
-        
         return Response({'message': 'Unfriended successfully.'}, status=status.HTTP_200_OK)
-
-
-
-
-
-
-
