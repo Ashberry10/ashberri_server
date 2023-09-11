@@ -112,7 +112,7 @@ class UserProfileView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class AllUser(APIView):
+class GetAllUser(APIView):
     def get(self, request, *args, **kwargs):
         try:
             stu = User.objects.get()
