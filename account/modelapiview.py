@@ -22,6 +22,7 @@ class AllUser(APIView):
         logged_in_serializer = UserProfileSerializer(logged_in_user)
         logged_in_user_name = logged_in_serializer.data['name']
         logged_in_user_id = logged_in_serializer.data['id']
+        logged_in_user_file = logged_in_serializer.data['file']
 
         c_first = logged_in_serializer.data['C_second']
         d_first = logged_in_serializer.data['D_second']
@@ -40,6 +41,7 @@ class AllUser(APIView):
             c_second = user_data['C_second']
             friend_name = user_data['name']
             id = user_data['id']
+            friend_file = user_data['file']
 
             prediction = model.predict([[d_first, c_first, c_second, d_second]])
 
@@ -47,6 +49,7 @@ class AllUser(APIView):
             if logged_in_user_name != friend_name:  # Only include friend name if it is not the logged-in user
                 # result_item.update({'FriendName': friend_name})
                 result_item.update({'ProfileName': friend_name})
+                result_item.update({'image': friend_file})
             if logged_in_user_name != friend_name:  # Only include compatibility if it is not the logged-in user
                 result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
 
@@ -60,6 +63,7 @@ class AllUser(APIView):
         # id = user_data['id']
         result_item.update({'id': logged_in_user_id})
         result_item.update({'ProfileName': logged_in_user_name})
+        result_item.update({'image': logged_in_user_file})
         # result_item.update({'FriendName': logged_in_user_name})
         result_item.update({'Compatibility': 'Self'})  # Indicate it's the logged-in user
         result.append(result_item)
