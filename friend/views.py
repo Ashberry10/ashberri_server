@@ -204,7 +204,7 @@ class FriendAPIView(APIView):
         sender_ids = [friend.sender.id for friend in friends]
         print(sender_ids)
 
-        sender_names = User.objects.filter(id__in=sender_ids).values('id', 'name')
+        sender_names = User.objects.filter(id__in=sender_ids).values('id', 'name','file')
 
         friend_data = []
         for friend in friends:
@@ -214,6 +214,7 @@ class FriendAPIView(APIView):
                         'id': friend.id,
                         'sender': sender['id'],
                         'name': sender['name'],
+                        'image': sender['file'],
                         'status': friend.status,
                         'compatibility': friend.compatibility,
                         'created_at': friend.created_at
