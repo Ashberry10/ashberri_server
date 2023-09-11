@@ -198,10 +198,26 @@ class FriendAPIView(APIView):
 
     def get(self, request):
         user_id = request.user.id
-        TotalFriend = FriendShip.objects.filter(receiver_id=user_id, status = 'accepted').count()
-        result = FriendShip.objects.filter(receiver_id=user_id, status = 'accepted')
-        serializer = FriendRequestSerializer(result, many=True)
-        data = serializer.data
+        friends = FriendShip.objects.filter(receiver_id=user_id, status = 'accepted')
+        TotalFriend = friends.count()
+
+        sender_ids = [friend.sender.id for friend in friends]
+        print(sender_ids)
+
+        sender_names = User.objects.filter(id__in=sender_ids).values('id', 'name')
+
+        friend_data = []
+        for friend in friends:
+            for sender in sender_names:
+                if friend.sender.id == sender['id']:
+                    friend_data.append({
+                        'id': friend.id,
+                        'sender': sender['id'],
+                        'name': sender['name'],
+                        'status': friend.status,
+                        'compatibility': friend.compatibility,
+                        'created_at': friend.created_at
+                    })
         
         if TotalFriend == 0:
             return Response({'message': 'make some founds'})
@@ -209,7 +225,7 @@ class FriendAPIView(APIView):
         return Response({
             'message': 'Successfull fetched list of friends',
             'total_friend': TotalFriend,
-            'friend':data
+            'friend':friend_data
         },status=status.HTTP_200_OK)
 
 class UnfriendAPIView(APIView):
