@@ -32,7 +32,7 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-
+#Registration
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer]
 
@@ -50,7 +50,7 @@ class UserRegistrationView(APIView):
         # print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+#Loging
 class UserLoginView(APIView):
     renderer_classes = [UserRenderer]
 
@@ -73,60 +73,7 @@ class UserLoginView(APIView):
             else:
                 return Response({'errors': {'non_field_errors': ['Email or Password-- is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
 
-
-class CreatePost1(APIView):
-    print('inside upload class')
-
-    def post(self, request):
-        try:
-            print('hi inside post upload')
-            print(request.data)
-            serializer = PostSerializer(data=request.data)
-            if serializer.is_valid():
-                print('serializer is valid ')
-                print('function call start')
-                image_url = self.upload_to_firebase(request.data['image'])
-                print('function call ends')
-                print('image url', image_url)
-                serializer.save(url=image_url)
-            else:
-                print('serializer is not valid')
-            return Response({'message': 'Post upladed'})
-        except:
-            raise APIException('Error uploading the post')
-
-    def get(self, request):
-        image_urls = self.get_all_image_urls()
-        return Response(image_urls)
-
-    def upload_to_firebase(self, image):
-        print(image)
-        print('inside upload to firebase started')
-        cred = credentials.Certificate('firebaseKey.json')
-        firebase_admin.initialize_app(cred, {
-            'storageBucket': 'photos-798d6.appspot.com'
-        })
-        print(image)
-        bucket = storage.bucket()
-        file_path = f'images/{image.name}'
-        blob = bucket.blob(file_path)
-        # Set the content type of the file based on its extension
-        content_type, _ = mimetypes.guess_type(image.name)
-        blob.content_type = content_type
-
-        blob.upload_from_file(image.file)
-        url = blob.public_url
-        # If the public URL is not available, construct it manually
-        if not url:
-            # f'https://storage.googleapis.com/{bucket.name}/images/{image.name}'
-            url = 'no public url'
-
-        return url
-
-    def get_all_image_urls(self):
-        return 'ji'
-
-
+#User Profile
 class UserProfileView(APIView):
     renderer_classes = [UserRenderer]
     permission_classes = [IsAuthenticated]
@@ -154,42 +101,26 @@ class UserProfileView(APIView):
         }
 
         return Response(response_data)
-# class UserChangePassword(APIView):
-#     renderer_classes = [UserRenderer]
-#     permission_classes = [IsAuthenticated]
-#     def post(self, request, format=None):
-#         serializer = UserChangePasswordSeriailzer(data=request.data,context = {'user':request.user})
-#         if serializer.is_valid(raise_exception=True):
-#             return Response({'msg':'Password Changed Successfully'},status=status.HTTP_200_OK)
-#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-# class SendPasswordResetEmailView(APIView):
-#     renderer_classes = [UserRenderer]
-#     def post(self,request,format=None):
-#         serializer = SendPasswordResetEmailSerializer(data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#             return Response({'msg':'Password Reset link send.Please check your Email'},status=status.HTTP_200_OK)
-#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
-# class UserPasswordResetView(APIView):
-#       renderer_classes = [UserRenderer]
-#       def post(self, request, uid, token, format=None):
-#        serializer = UserPasswordResetSerializer(data=request.data, context={'uid':uid, 'token':token})
-#        serializer.is_valid(raise_exception=True)
-
-#        return Response({'msg':'Password Reset Successfully'}, status=status.HTTP_200_OK)
-
+    
+    def patch(self, request):  # update user profile
+        user = request.user  # user refer to the loged in user (token)
+        serializer = UpdateUserSeriailzer(
+            user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AllUser(APIView):
     def get(self, request, *args, **kwargs):
         try:
-            id = request.query_params["id"]
-            if id is not None:
-                stu = User.objects.get(id=id)
-                serializer = GetallUserSeriailzer(stu)
-                json_data = JSONRenderer().render(serializer.data)
-                return HttpResponse(json_data, content_type='application/json')
+            stu = User.objects.get()
+            print("stu: " , stu)
+            serializer = GetallUserSeriailzer(stu)
+            json_data = JSONRenderer().render(serializer.data)
+            
+            return HttpResponse(json_data, content_type='application/json')
 
         except:
 
