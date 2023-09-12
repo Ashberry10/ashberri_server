@@ -109,7 +109,7 @@ class FriendStatusAndCompatibilityById(APIView):
         logged_in_user_id = logged_in_serializer.data['id']
         friend_serializer = UserProfileSerializer(friend)
         friend_name = friend_serializer.data['name']
-        friend_image = logged_in_serializer.data['file']
+        friend_image = friend_serializer.data['file']
         result = []
         prediction = model.predict([[d_first, c_first, friend_serializer.data['C_second'], friend_serializer.data['D_second']]])
 
