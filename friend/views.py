@@ -212,7 +212,7 @@ class FriendAPIView(APIView):
                 if friend.sender.id == sender['id']:
                     friend_data.append({
                         'id': friend.id,
-                        'sender': sender['id'],
+                        'sender_id': sender['id'],
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,

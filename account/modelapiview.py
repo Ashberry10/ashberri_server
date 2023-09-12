@@ -82,13 +82,6 @@ class AllUser(APIView):
             return 5
 
 
-
-
-
-
-
-
-
 # API FOR GET FriendStatusAndCompatibilit By Id
 class FriendStatusAndCompatibilityById(APIView):
     permission_classes = [IsAuthenticated]
@@ -116,6 +109,7 @@ class FriendStatusAndCompatibilityById(APIView):
         logged_in_user_id = logged_in_serializer.data['id']
         friend_serializer = UserProfileSerializer(friend)
         friend_name = friend_serializer.data['name']
+        friend_image = logged_in_serializer.data['file']
         result = []
         prediction = model.predict([[d_first, c_first, friend_serializer.data['C_second'], friend_serializer.data['D_second']]])
 
@@ -123,9 +117,10 @@ class FriendStatusAndCompatibilityById(APIView):
         
         if logged_in_user_id != friend.id:
             result_item = {}
-            result_item.update({'ProfileName': friend_name})
-            result_item.update({'FriendStatus': friend_status})
-            result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
+            result_item.update({'profileName': friend_name})
+            result_item.update({'image': friend_image})
+            result_item.update({'friendStatus': friend_status})
+            result_item.update({'compatibility': self.get_compatibility_label(prediction)})
 
 
             result.append(result_item)
