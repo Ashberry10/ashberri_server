@@ -18,7 +18,13 @@ class CreatePost(APIView):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=luser)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            data = serializer.data
+            ResponseBody = {
+                "success": True,
+                "message": "Post created successfully",
+                "data": data
+            }
+            return Response(ResponseBody, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, post_id):
