@@ -50,6 +50,9 @@ class AllUser(APIView):
                 # result_item.update({'FriendName': friend_name})
                 result_item.update({'ProfileName': friend_name})
                 result_item.update({'image': friend_file})
+                print(logged_in_user.id, id)
+                friend_status = self.get_friend_status(logged_in_user.id, id)
+                result_item.update({'friend_status':friend_status})
             if logged_in_user_name != friend_name:  # Only include compatibility if it is not the logged-in user
                 result_item.update({'Compatibility': self.get_compatibility_label(prediction)})
 
@@ -80,7 +83,19 @@ class AllUser(APIView):
             return 4
         elif prediction[0] == 5:
             return 5
+        
+    def get_friend_status(self, user, id):
+        friend = FriendShip.objects.filter(
+            (Q(sender=user) & Q(receiver=id)) | (Q(sender=id) & Q(receiver=user))
+        ).first()
 
+        if friend:
+            if friend.status == 'accepted':
+                return 'Friends'
+            else:
+                return 'Pending'
+        else:
+            return 'Request_Not_Sent'
 
 # API FOR GET FriendStatusAndCompatibilit By Id
 class FriendStatusAndCompatibilityById(APIView):
@@ -142,11 +157,11 @@ class FriendStatusAndCompatibilityById(APIView):
 
         if friendship:
             if friendship.status == 'accepted':
-                return 'We Are Friends'
+                return 'Friends'
             else:
                 return 'Pending'
         else:
-            return 'Friend Request Not Sent'
+            return 'Request_Not_Sent'
 
     def get_compatibility_label(self, prediction):
         if prediction == 0:
