@@ -7,6 +7,12 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id','user_id','content','image','timestamp']
 
+
+class PostByIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id','user_id','content','image','timestamp']
+
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like

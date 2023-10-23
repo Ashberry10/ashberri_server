@@ -7,7 +7,7 @@ from rest_framework import status
 
 from account.serializers import UpdateUserSeriailzer
 from post.models import Comment, Like, Post, Share
-from post.serializers import CommentSerializer, LikeSerializer, PostSerializer, ShareSerializer
+from post.serializers import CommentSerializer, LikeSerializer, PostByIdSerializer, PostSerializer, ShareSerializer
 
 
 class CreatePost(APIView):
@@ -29,8 +29,17 @@ class CreatePost(APIView):
 
     def get(self, request, post_id):
         post = Post.objects.filter(id=post_id)
-        serializer = PostSerializer(post, many=True)
-        return Response(serializer.data)  # todo add more details in resposne
+        serializer = PostByIdSerializer(post,many=True)
+        data = serializer.data
+        like = Like.objects.filter(post_id =1)
+        like_data = LikeSerializer(like, many=True)
+        ResponseBody = {
+            "success": True,
+            "message": "Post fetched successfully",
+            "data": data,
+            "like": like_data.data
+        }
+        return Response(ResponseBody)  # todo add more details in resposne
 
     def patch(self, request, post_id):  # update user profile
         user = post_id  # user refer to the loged in user (token)
