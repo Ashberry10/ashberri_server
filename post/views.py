@@ -53,8 +53,8 @@ class CreatePost(APIView):
 
     def delete(self, request, post_id):
         try:
-            user = Post.objects.get(id=post_id)
-            user.delete()
+            post = Post.objects.get(id=post_id)
+            post.delete()
             return Response({'message': 'Post deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Post.DoesNotExist:
             return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
