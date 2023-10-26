@@ -59,6 +59,21 @@ class CreatePost(APIView):
         except Post.DoesNotExist:
             return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
 
+class GetPostByUserID(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+
+        post_data = Post.objects.filter(user_id = user_id)
+        user_post_data = PostSerializer(post_data, many=True)
+
+        ResponseBody = {
+            "success": True,
+            "message": "Post fetched successfully",
+            "data": user_post_data.data
+        }
+        return Response(ResponseBody)
+
 
 class LikePost(APIView):
     permission_classes = [IsAuthenticated]
