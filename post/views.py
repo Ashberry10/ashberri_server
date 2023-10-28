@@ -7,7 +7,7 @@ from rest_framework import status
 
 from account.serializers import UpdateUserSeriailzer
 from post.models import Comment, Like, Post, Share
-from post.serializers import CommentSerializer, LikeSerializer, PostByIdSerializer, PostSerializer, ShareSerializer
+from post.serializers import CommentSerializer, GetCommentSerializer, LikeSerializer, PostByIdSerializer, PostSerializer, ShareSerializer
 
 
 class CreatePost(APIView):
@@ -103,23 +103,46 @@ class SharePost(APIView):
         share.save()
         return Response(status=status.HTTP_201_CREATED)
 
+class Comments(APIView):
+    permission_classes = [IsAuthenticated]
 
-class CommentPost(APIView):
+    def get(self, request):
+        comments = Comment.objects.all()
+        serializer = GetCommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CommentByID(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, comment_id):
+        comments = Comment.objects.filter(id=comment_id)
+        serializer = GetCommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+
+    def delete(self, request, comment_id):
+        try:
+            comment = Comment.objects.get(id=comment_id)
+            comment.delete()
+            return Response({'message': 'comment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Post.DoesNotExist:
+            return Response({'error': 'comment not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+class CommentByPostID(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, post_id):
         post = Post.objects.get(pk=post_id)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user, post=post)
+            serializer.save(user_id=request.user, post_id=post)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     def get(self, request, post_id):
         comments = Comment.objects.filter(post_id=post_id)
-        serializer = CommentSerializer(comments, many=True)
+        serializer = GetCommentSerializer(comments, many=True)
         return Response(serializer.data)
-
 
 class GetPosts(APIView):
     permission_classes = [IsAuthenticated]

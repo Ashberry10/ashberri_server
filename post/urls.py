@@ -1,5 +1,5 @@
 from django.urls import path
-from post.views import CommentPost, CreatePost, GetPostByUserID, GetPosts, LikePost, SharePost
+from post.views import CommentByID, CommentByPostID, Comments, CreatePost, GetPostByUserID, GetPosts, LikePost, SharePost
 
 
 urlpatterns = [
@@ -10,5 +10,8 @@ urlpatterns = [
     path('<int:post_id>/',CreatePost.as_view(), name='delete Post'),
     path('like/<int:post_id>/', LikePost.as_view(), name='like'),
     path('share/<int:post_id>/', SharePost.as_view(), name='share'),
-    path('comment/<int:post_id>/', CommentPost.as_view(), name='get_comment_by_post_id'),
+    path('comment/', Comments.as_view(), name='comment'), #create, get all
+    path('comment/<int:comment_id>/', CommentByID.as_view(), name='get_comment_by_id'), #get by id , delete by id, update by id
+    path('comment/post_id/<int:post_id>/', CommentByPostID.as_view(), name='get_comment_by_post_id'), # create, get all comment of a post by post_id
+
 ]
