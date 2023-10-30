@@ -1,9 +1,10 @@
-
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from rest_framework import generics
 
 from account.serializers import UpdateUserSeriailzer
 from post.models import Comment, Like, Post, Share
@@ -79,10 +80,26 @@ class LikePost(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, post_id):
-        post = Post.objects.get(pk=post_id)
-        like = Like(user=request.user, post=post)
-        like.save()
-        return Response(status=status.HTTP_201_CREATED)
+        try:
+            post = get_object_or_404(Post, pk=post_id)
+            user = request.user
+
+            existing_like = Like.objects.filter(user=user, post=post).first()
+            
+            if existing_like:
+                existing_like.delete()
+                message = "Post unliked successfully"
+                status_code = status.HTTP_200_OK
+            else:
+                like = Like(user=user, post=post)
+                like.save()
+                message = "Post liked successfully"
+                status_code = status.HTTP_201_CREATED
+            
+            response_data = {"message": message}
+            return Response(response_data, status=status_code)
+        except Post.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, post_id):
         post = Post.objects.get(pk=post_id)
@@ -93,6 +110,19 @@ class LikePost(APIView):
         serializer = PostSerializer(post, many=True)
         return Response(serializer.data)  # todo add more details in resposne
 
+class ListLikesForPost(generics.ListAPIView):
+    serializer_class = LikeSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Like.objects.filter(post_id=post_id)
+
+
+class CountLikesForPost(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        post_id = self.kwargs['post_id']
+        like_count = Like.objects.filter(post_id=post_id).count()
+        return Response({'like_count': like_count})
 
 class SharePost(APIView):
     permission_classes = [IsAuthenticated]
