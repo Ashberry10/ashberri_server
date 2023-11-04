@@ -175,14 +175,33 @@ class ViewAllFriendRequestAPIView(APIView):
         user_id = request.user.id
         friend_requests = FriendShip.objects.filter(receiver_id=user_id,status = 'pending')
         count = friend_requests.count()
-        serializer = FriendRequestSerializer(friend_requests, many=True)
-        serialized_data = serializer.data
 
+        # serializer = FriendRequestSerializer(friend_requests, many=True)
+        # serialized_data = serializer.data
+        
+        sender_ids = [friend.sender.id for friend in friend_requests]
+        print(sender_ids)
+        sender_names = User.objects.filter(id__in=sender_ids).values('id', 'name','file')
+
+        friend_requests_data = []
+        for friend in friend_requests:
+            for sender in sender_names:
+                if friend.sender.id == sender['id']:
+                    friend_requests_data.append({
+                        'id': friend.id,
+                        'sender_id': sender['id'],
+                        'name': sender['name'],
+                        'image': sender['file'],
+                        'status': friend.status,
+                        'compatibility': friend.compatibility,
+                        'created_at': friend.created_at
+                    })
+        
         # Update serialized data to include sender's name
-        for data in serialized_data:
-            sender_id = data['sender']
-            sender_name = User.objects.get(id=sender_id).name
-            data['sender_name'] = sender_name
+        # for data in serialized_data:
+        #     sender_id = data['sender']
+        #     sender_name = User.objects.get(id=sender_id).name
+        #     data['sender_name'] = sender_name
 
         if count == 0:
             return Response({'message': 'No friend requests found'}, status=status.HTTP_404_NOT_FOUND)
@@ -190,7 +209,7 @@ class ViewAllFriendRequestAPIView(APIView):
         return Response({
             'message': 'All friend requests',
             'total_friend_requests': count,
-            'friend_requests': serialized_data
+            'friend_requests': friend_requests_data,
         }, status=status.HTTP_200_OK)
 
 class FriendAPIView(APIView):
