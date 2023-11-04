@@ -217,7 +217,8 @@ class FriendAPIView(APIView):
 
     def get(self, request):
         user_id = request.user.id
-        friends = FriendShip.objects.filter(receiver_id=user_id, status = 'accepted')
+        friends_h= FriendShip.objects.filter(receiver_id=user_id, status = 'accepted')
+        friends = FriendShip.objects.filter(Q(status = 'accepted'), Q(receiver_id=user_id) | Q(sender_id=user_id))
         TotalFriend = friends.count()
 
         sender_ids = [friend.sender.id for friend in friends]
