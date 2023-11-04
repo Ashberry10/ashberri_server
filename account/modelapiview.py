@@ -143,7 +143,7 @@ class FriendStatusAndCompatibilityById(APIView):
         else:
             result_item = {}
             result_item.update({'id': logged_in_user_id})
-            result_item.update({'ProfileName': logged_in_user_name})
+            result_item.update({'profileName': logged_in_user_name})
             result_item.update({'image': loged_in_user_image})
             result.append(result_item)
             
