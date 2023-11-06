@@ -217,31 +217,35 @@ class FriendAPIView(APIView):
 
     def get(self, request):
         user_id = request.user.id
-        friends_h= FriendShip.objects.filter(receiver_id=user_id, status = 'accepted')
         friends = FriendShip.objects.filter(Q(status = 'accepted'), Q(receiver_id=user_id) | Q(sender_id=user_id))
         TotalFriend = friends.count()
 
-        sender_ids = [friend.sender.id for friend in friends]
-        print(sender_ids)
+        if TotalFriend == 0:
+            return Response({'message': 'make some founds'})
 
-        sender_names = User.objects.filter(id__in=sender_ids).values('id', 'name','file')
+        frieds_ids = []
+        for friend in friends:
+            if friend.sender.id != user_id:
+                frieds_ids.append(friend.sender.id)
+            else:
+                frieds_ids.append(friend.receiver.id)
+
+        print(frieds_ids)
+
+        frieds_names = User.objects.filter(id__in=frieds_ids).values('id', 'name','file')
 
         friend_data = []
         for friend in friends:
-            for sender in sender_names:
-                if friend.sender.id == sender['id']:
+            for sender in frieds_names:
                     friend_data.append({
                         'id': friend.id,
-                        'sender_id': sender['id'],
+                        'user_id': sender['id'],
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,
                         'compatibility': friend.compatibility,
                         'created_at': friend.created_at
                     })
-        
-        if TotalFriend == 0:
-            return Response({'message': 'make some founds'})
 
         return Response({
             'message': 'Successfull fetched list of friends',
