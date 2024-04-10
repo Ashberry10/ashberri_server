@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'customsearch',
     'channels',
     'friend',
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'django.contrib.sessions',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -183,3 +185,84 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+
+CORS_ORIGIN_WHITELIST = [
+    "http://0.0.0.0",
+    "http://localhost:80",
+    "http://127.0.0.1:80",
+    "http://localhost",
+    "http://127.0.0.1",
+    'http://localhost:3000',
+    "http://127.0.0.1:3000",
+    'https://ashberri-api.onrender.com',
+    "http://www.ashberri.in",
+    "http://223.235.84.152",
+    "http://www.ashberri.in:3000",
+    "http://223.235.84.152:3000",
+    # "https://www.ashberri.in",
+    "https://223.235.84.152",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://0.0.0.0",
+    "http://localhost:80",
+    "http://127.0.0.1:80",
+    "http://localhost",
+    "http://127.0.0.1",
+    'http://localhost:3000',
+    "http://127.0.0.1:3000",
+    'https://ashberri-api.onrender.com',
+    "http://www.ashberri.in",
+    "http://223.235.84.152",
+    "http://www.ashberri.in:3000",
+    "http://223.235.84.152:3000",
+    # "https://www.ashberri.in",
+    "https://223.235.84.152",
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",  # Add the necessary origins here
+    "http://www.ashberri.in",
+    "http://localhost:80",
+    "http://127.0.0.1:80",
+    "http://localhost",
+    "http://127.0.0.1",
+    "http://0.0.0.0",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    'https://ashberri-api.onrender.com',
+    "http://www.ashberri.in",
+    "http://223.235.84.152",
+    "http://www.ashberri.in:3000",
+    "http://223.235.84.152:3000",
+    # "https://www.ashberri.in",
+    "https://223.235.84.152",
+]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+# Django project settings.py
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
