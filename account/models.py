@@ -1,3 +1,17 @@
+# # models.py
+# from django.db import models
+
+# class MyModel(models.Model):
+#     name = models.CharField(max_length=100)
+#     description = models.TextField()
+
+#     def __str__(self):
+#         return self.name
+
+
+
+
+
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 import datetime
@@ -5,7 +19,7 @@ import json
 from django.contrib.auth.models import User
 # Create your models here.
 from django.dispatch import receiver
-from friend.models import FriendList
+# from friend.models import FriendList
 from django.db.models.signals import post_save
 
 #Custon User Manager
@@ -198,9 +212,9 @@ class User(AbstractBaseUser):
         return self.is_admin
     
     
-@receiver(post_save, sender=User)
-def user_save(sender, instance, **kwargs):
-    FriendList.objects.get_or_create(user=instance)
+# @receiver(post_save, sender=User)
+# def user_save(sender, instance, **kwargs):
+#     FriendList.objects.get_or_create(user=instance)
 
 
 # #models to review

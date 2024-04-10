@@ -12,14 +12,14 @@ from django.http import HttpResponse
 from rest_framework_simplejwt.tokens import RefreshToken
 from account.renderers import UserRenderer
 from rest_framework.permissions import IsAuthenticated
-import firebase_admin
-from firebase_admin import storage
-from firebase_admin import credentials
+# import firebase_admin
+# from firebase_admin import storage
+# from firebase_admin import credentials
 import joblib  # from django_filters.rest_framework import DjangoFilterBackend
 from friend.models import FriendShip  # from rest_framework import generics
-print('inside views.py')
+
 # from rest_framework import filters
-model = joblib.load('./ABmodel.joblib')
+model = joblib.load('./new_model.joblib')
 
 # Generate Token Manually
 
@@ -59,19 +59,21 @@ class UserLoginView(APIView):
         if serializer.is_valid(raise_exception=True):
             email = serializer.data.get('email')
             password = serializer.data.get('password')
+            print("Email:", email)  # Debugging statement
+            print("Password:", password)  # Debugging statement
             user = authenticate(email=email, password=password)
             if user is not None:
-                #  token = get_tokens_for_user(user)
-
                 refresh = RefreshToken.for_user(user)
-
-                accessToken = str(refresh.access_token),
-            #  name = user.name
-            #  return Response({'token':token,'name':user.name,'Dfirst':user.Dfirst,'Cfirst':user.Cfirst ,'msg':'Login Successfull'},status=status.HTTP_200_OK)
+                accessToken = str(refresh.access_token)
                 return Response({'name': user.name, 'accessToken': accessToken}, status=status.HTTP_200_OK)
-
             else:
-                return Response({'errors': {'non_field_errors': ['Email or Password-- is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
+                print("Authentication failed")  # Debugging statement
+                return Response({'errors': {'non_field_errors': ['Email or Password is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            print("Serializer errors:", serializer.errors)  # Debugging statement
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 #User Profile
 class UserProfileView(APIView):

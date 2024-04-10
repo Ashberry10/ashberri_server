@@ -10,7 +10,7 @@ from friend.models import FriendShip
 from rest_framework.permissions import IsAuthenticated
 import joblib
 import json
-model = joblib.load('./ABmodel.joblib')
+model = joblib.load('./new_model.joblib')
 
 
 # Alluser FriendStatusAndCompatibilityAPI
@@ -45,7 +45,7 @@ class AllUser(APIView):
             friend_status = self.get_friend_status(logged_in_user, id)
 
             # Your model.predict code here
-            prediction = model.predict([[d_first, c_first, c_second, d_second]])
+            prediction = model.predict([[d_first,c_first,c_second,d_second]])
 
             result_item.update({'id': id})
             if logged_in_user_name != friend_name:

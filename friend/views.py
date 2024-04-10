@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from account.serializers import UserProfileSerializer
 from .serializers import FriendShipSerializer,FriendRequestSerializer,FriendShipStatusSerializer,AcceptOrRejectFriendRequestSerializer
 import joblib
-model = joblib.load('./ABmodel.joblib')
+model = joblib.load('./new_model.joblib')
 
 
 class FriendRequestAPIView(APIView):
