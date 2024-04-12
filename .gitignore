@@ -94,7 +94,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
-
+menv
 # Chutzpah Test files
 _Chutzpah*
 

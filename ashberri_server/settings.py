@@ -89,8 +89,12 @@ AUTH_USER_MODEL = 'account.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ashberridb',
+        'USER': 'ashberri',#'postgres',
+        'PASSWORD': '123',
+        'HOST': 'localhost',#'223.235.84.152', #
+        'PORT': '5432',
     }
 }
 SIMPLE_JWT = {
