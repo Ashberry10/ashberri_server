@@ -1,5 +1,10 @@
 **Steps:**
 
+**Database Setup**
+```
+❯ chmod +x setup_postgres.sh
+❯ sudo ./setup_postgres.sh
+
 1. **Clone the Repository:**
 
    ```bash
@@ -11,6 +16,10 @@
 
     ```bash
     source env/bin/activate
+5. **run migration**
+
+    ```
+    python manage.py migrate
 5. **run the project:**
      ```bash
      python manage.py runserver
