@@ -19,6 +19,10 @@ sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
 sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
 
+# Grant permissions to the user on the public schema
+echo "Granting permissions to the user on the public schema..."
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $DB_USER;" $DB_NAME
+
 # Modify pg_hba.conf for md5 authentication
 PG_HBA_PATH=$(find /etc/postgresql -type f -name "pg_hba.conf")
 echo "Configuring $PG_HBA_PATH for md5 authentication..."
