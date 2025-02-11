@@ -1,5 +1,6 @@
 **Steps:**
 
+
 **Database Setup**
 ```
 ❯ chmod +x setup_postgres.sh
@@ -23,3 +24,9 @@
 5. **run the project:**
      ```bash
      python manage.py runserver
+
+<!-- 11-2-25
+latest code 
+source env/bin/activate
+env\Scripts\activate 
+python manage.py runserver -->
