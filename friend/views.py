@@ -44,8 +44,8 @@ class FriendRequestAPIView(APIView):
             friend_name = friend_serializer.data['name']
 
             result = model.predict([[d_first, c_first, friend_serializer.data['C_second'], friend_serializer.data['D_second']]])
-            #compatibility end
-            serializer.validated_data['compatibility'] = result
+            #rank end
+            serializer.validated_data['rank'] = result
 
             # Set the sender as the logged-in user and create the friend request
             friend_request = serializer.save(sender=logged_in_user)
@@ -56,7 +56,7 @@ class FriendRequestAPIView(APIView):
                 'message': f"Friend request has been sent successfully to {receiver_name}",
                 'friend_request_id': friend_request.id,
                 'receiver': receiver.id,
-                'compatability': serializer.data['compatibility']
+                'rank': serializer.data['rank']
             }, status=status.HTTP_201_CREATED)
         else:
             errors = serializer.errors
@@ -193,7 +193,7 @@ class ViewAllFriendRequestAPIView(APIView):
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,
-                        'compatibility': friend.compatibility,
+                        'rank': friend.rank,
                         'created_at': friend.created_at
                     })
         
@@ -243,7 +243,7 @@ class FriendAPIView(APIView):
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,
-                        'compatibility': friend.compatibility,
+                        'rank': friend.rank,
                         'created_at': friend.created_at
                     })
 

@@ -100,7 +100,7 @@ class User(AbstractBaseUser):
     day = models.IntegerField(default=0)
     month = models.IntegerField(default=0)
     year = models.IntegerField(default=0)
-    # compatibility = models.IntegerField(default=0)
+    # rank = models.IntegerField(default=0)
     # date_of_birth = models.DateField(null=True)
     date_of_birth = models.DateTimeField(default=0)
     file = models.ImageField(upload_to='profile_photo/%Y/%m/%d',null=True,blank=True,verbose_name='profile_photo',default='defaultuserpic.png')

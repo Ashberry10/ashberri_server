@@ -1,4 +1,4 @@
-from account.modelapiview import AllUser, FriendStatusAndCompatibilityById
+from account.modelapiview import AllUser, FriendStatusAndrankById
 from account.views import GetAllUser, UpdateUser,UserProfileView , UserDeleteView, UserLoginView,UserRegistrationView
 from django.urls import path,include
 
@@ -12,8 +12,8 @@ urlpatterns = [
     path('users/', GetAllUser.as_view(),name='getallusers'),
     path('users/<int:id>',GetAllUser.as_view(), ),
     # path('search/', include('customsearch.urls')),
-    path('friendStatusAndCompatibility/', AllUser.as_view(), name='friend_status_and_compatibility'),
-    path('friendStatusAndCompatibilityById/', FriendStatusAndCompatibilityById.as_view(), name='friendStatusAndCompatibilitById'),
+    path('friendStatusAndrank/', AllUser.as_view(), name='friend_status_and_rank'),
+    path('friendStatusAndrankById/', FriendStatusAndrankById.as_view(), name='friendStatusAndrankById'),
     path('deleteuser/<int:id>', UserDeleteView.as_view(), name='user-delete'),
 ] 
 

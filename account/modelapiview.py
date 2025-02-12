@@ -15,7 +15,7 @@ import csv
 # model = joblib.load('./new_model.joblib')
 
 
-# Alluser FriendStatusAndCompatibilityAPI
+# Alluser FriendStatusAndrankAPI
 # class AllUser(APIView):
 #     permission_classes = [IsAuthenticated]
 
@@ -54,7 +54,7 @@ import csv
 #                 result_item.update({'ProfileName': friend_name})
 #                 result_item.update({'image': friend_file})
 #             if logged_in_user_name != friend_name:
-#                 result_item.update({'compatibility': self.get_compatibility_label(prediction)})
+#                 result_item.update({'rank': self.get_rank_label(prediction)})
 #             result_item.update({'friend_status': friend_status})  # Add friend status to the result
 
 #             result.append(result_item)
@@ -64,12 +64,12 @@ import csv
 #         result_item.update({'id': logged_in_user_id})
 #         result_item.update({'ProfileName': logged_in_user_name})
 #         result_item.update({'image': logged_in_user_file})
-#         result_item.update({'compatibility': 'Self'})
+#         result_item.update({'rank': 'Self'})
 #         result.append(result_item)
 
 #         return JsonResponse(result, safe=False)
 
-#     def get_compatibility_label(self, prediction):
+#     def get_rank_label(self, prediction):
 #         if prediction == 0:
 #             return 0
 #         elif prediction[0] == 3:
@@ -99,19 +99,19 @@ import csv
 
 
 
-# # API FOR GET FriendStatusAndCompatibilit By Id
-# class FriendStatusAndCompatibilityById(APIView):
+# # API FOR GET FriendStatusAndrnak By Id
+# class FriendStatusAndrankById(APIView):
 #     permission_classes = [IsAuthenticated]
 
 #     def get(self, request):
 #         id = request.query_params.get('id')
 
 #         if id:
-#             return self.get_friend_status_and_compatibility_by_id(request, id)
+#             return self.get_friend_status_and_rank_by_id(request, id)
 #         else:
 #             return Response({'error': 'Missing User ID.'}, status=status.HTTP_400_BAD_REQUEST)
 
-#     def get_friend_status_and_compatibility_by_id(self, request, id):
+#     def get_friend_status_and_rank_by_id(self, request, id):
 #         try:
 #             friend = User.objects.get(id=id)
 #         except User.DoesNotExist:
@@ -138,7 +138,7 @@ import csv
 #             result_item.update({'profileName': friend_name})
 #             result_item.update({'image': friend_image})
 #             result_item.update({'friend_status': friend_status})
-#             result_item.update({'compatibility': self.get_compatibility_label(prediction)})
+#             result_item.update({'rank': self.get_rank_label(prediction)})
 
 
 #             result.append(result_item)
@@ -172,7 +172,7 @@ import csv
 #        return friend_status
     
     
-#     def get_compatibility_label(self, prediction):
+#     def get_rank_label(self, prediction):
 #         if prediction == 0:
 #             return 0
 #         elif prediction[0] == 3:
@@ -222,11 +222,11 @@ import csv
 #         reader = csv.DictReader(file)
 #         for row in reader:
 #             key = (int(row['Dfirst']), int(row['Cfirst']), int(row['Csecond']), int(row['Dsecond']))
-#             index[key] = int(row['Ranks'])
+#             index[key] = int(row['rank'])
 #     return index
 
 # # Load CSV data and create the index
-# csv_file_path = r"./ab_compatibility_rating_data.csv"
+# csv_file_path = r"./ab_rank_rating_data.csv"
 #  # Path to your CSV file
 # index = build_index_from_csv(csv_file_path)
 
@@ -234,12 +234,12 @@ import csv
 # with open("rank_index.pkl", 'wb') as file:
 #     pickle.dump(index, file)
 
-# # Predict compatibility rank
+# # Predict rank rank
 # def predict_rank(Dfirst, Cfirst, Csecond, Dsecond, index):
 #     key = (Dfirst, Cfirst, Csecond, Dsecond)
 #     return index.get(key, "No matching data found")
 
-# # API for getting all users and friend status with compatibility
+# # API for getting all users and friend status with rank
 # class AllUser(APIView):
 #     permission_classes = [IsAuthenticated]
 
@@ -276,7 +276,7 @@ import csv
 #             result_item.update({'id': friend_id})
 #             result_item.update({'ProfileName': friend_name})
 #             result_item.update({'image': friend_file})
-#             result_item.update({'compatibility': prediction})
+#             result_item.update({'rank': prediction})
 #             result_item.update({'friend_status': friend_status})  # Add friend status to the result
 
 #             result.append(result_item)
@@ -286,7 +286,7 @@ import csv
 #         result_item.update({'id': logged_in_user_id})
 #         result_item.update({'ProfileName': logged_in_user_name})
 #         result_item.update({'image': logged_in_user_file})
-#         result_item.update({'compatibility': 'Self'})
+#         result_item.update({'rank': 'Self'})
 #         result.append(result_item)
 
 #         return JsonResponse(result, safe=False)
@@ -313,7 +313,7 @@ import csv
 
 
 
-# class FriendStatusAndCompatibilityById(APIView):
+# class FriendStatusAndrankById(APIView):
 #     permission_classes = [IsAuthenticated]
     
 #     def get(self, request):
@@ -346,18 +346,18 @@ import csv
 #             # Get the friendship status
 #             friend_status = self.get_friend_status(logged_in_user, target_user.id)
 
-#             # Predict compatibility rank using CSV data
+#             # Predict rank rank using CSV data
 #             prediction = predict_rank(d_first, c_first, c_second, d_second, index)
 
 #             result = []
 
-#             # If the logged-in user is not the same as the target user, return compatibility data
+#             # If the logged-in user is not the same as the target user, return rank data
 #             if logged_in_user_id != target_user.id:
 #                 result_item = {
 #                     'id': target_user.id,
 #                     'ProfileName': target_user_name,
 #                     'image': target_user_file,
-#                     'compatibility': prediction,
+#                     'rank': prediction,
 #                     'friend_status': friend_status
 #                 }
 #                 result.append(result_item)
@@ -367,7 +367,7 @@ import csv
 #                     'id': logged_in_user_id,
 #                     'ProfileName': logged_in_user_name,
 #                     'image': logged_in_user_file,
-#                     'compatibility': 'Self'
+#                     'rank': 'Self'
 #                 }
 #                 result.append(result_item)
 
@@ -430,7 +430,7 @@ else:
             for row in reader:
                 try:
                     key = tuple(map(int, (row['Dfirst'], row['Cfirst'], row['Csecond'], row['Dsecond'])))
-                    index[key] = int(row['Ranks'])
+                    index[key] = int(row['rank'])
                 except ValueError as e:
                     print(f"Skipping invalid row: {row} (Error: {e})")
         with open(pickle_file_path, 'wb') as pickle_file:
@@ -439,7 +439,7 @@ else:
     else:
         raise FileNotFoundError(f"CSV file at {csv_file_path} not found.")
 
-# Predict compatibility rank based on the index
+# Predict rank rank based on the index
 def predict_rank(Dfirst, Cfirst, Csecond, Dsecond):
     return index.get((Dfirst, Cfirst, Csecond, Dsecond), "No matching data found")
 
@@ -465,17 +465,17 @@ class AllUser(APIView):
 
         result = [{
             'id': user['id'], 'ProfileName': user['name'], 'image': user['file'],
-            'compatibility': predict_rank(d_first, c_first, int(user['C_second']), int(user['D_second'])),
+            'rank': predict_rank(d_first, c_first, int(user['C_second']), int(user['D_second'])),
             'friend_status': get_friend_status(logged_in_user, user['id'])
         } for user in users_data]
 
         result.append({
             'id': logged_in_user.id, 'ProfileName': logged_in_profile['name'],
-            'image': logged_in_profile['file'], 'compatibility': 'Self'
+            'image': logged_in_profile['file'], 'rank': 'Self'
         })
         return JsonResponse(result, safe=False)
 
-class FriendStatusAndCompatibilityById(APIView):
+class FriendStatusAndrankById(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -496,11 +496,11 @@ class FriendStatusAndCompatibilityById(APIView):
 
         result = {
             'id': target_user.id, 'ProfileName': target_profile['name'], 'image': target_profile['file'],
-            'compatibility': predict_rank(d_first, c_first, c_second, d_second),
+            'rank': predict_rank(d_first, c_first, c_second, d_second),
             'friend_status': get_friend_status(logged_in_user, target_user.id)
         }
 
         if logged_in_user.id == target_user.id:
-            result['compatibility'] = 'Self'
+            result['rank'] = 'Self'
 
         return JsonResponse([result], safe=False)

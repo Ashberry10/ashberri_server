@@ -59,7 +59,7 @@ class FriendShip(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_friend_requests')
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_friend_requests')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
-    compatibility = models.IntegerField(default=1)
+    rank = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
