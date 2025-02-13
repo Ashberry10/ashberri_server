@@ -454,7 +454,7 @@ def get_friend_status(user, friend_id):
 
 
 
-class AllUser(APIView):
+class AllUserInfoWithFriendStatus(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -464,18 +464,18 @@ class AllUser(APIView):
         d_first, c_first = int(logged_in_profile['D_second']), int(logged_in_profile['C_second'])
 
         result = [{
-            'id': user['id'], 'ProfileName': user['name'], 'image': user['file'],
+            'id': user['id'], 'ProfileName': user['name'], 'image': user['file'],'gender':user['gender'],'date_of_birth':user['date_of_birth'],
             'rank': predict_rank(d_first, c_first, int(user['C_second']), int(user['D_second'])),
             'friend_status': get_friend_status(logged_in_user, user['id'])
         } for user in users_data]
 
         result.append({
-            'id': logged_in_user.id, 'ProfileName': logged_in_profile['name'],
+            'id': logged_in_user.id, 'ProfileName': logged_in_profile['name'],'gender':logged_in_profile['gender'],'date_of_birth':logged_in_profile['date_of_birth'],
             'image': logged_in_profile['file'], 'rank': 'Self'
         })
         return JsonResponse(result, safe=False)
 
-class FriendStatusAndrankById(APIView):
+class UserByIdInfoWithFriendStatus(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -495,7 +495,7 @@ class FriendStatusAndrankById(APIView):
         d_second, c_second = int(target_profile['D_second']), int(target_profile['C_second'])
 
         result = {
-            'id': target_user.id, 'ProfileName': target_profile['name'], 'image': target_profile['file'],
+            'id': target_user.id, 'ProfileName': target_profile['name'], 'image': target_profile['file'],'gender':target_profile['gender'],'date_of_birth':target_profile['date_of_birth'],
             'rank': predict_rank(d_first, c_first, c_second, d_second),
             'friend_status': get_friend_status(logged_in_user, target_user.id)
         }
