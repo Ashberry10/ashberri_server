@@ -14,8 +14,37 @@ from rest_framework.views import APIView
 from account.serializers import UserProfileSerializer
 from .serializers import FriendShipSerializer,FriendRequestSerializer,FriendShipStatusSerializer,AcceptOrRejectFriendRequestSerializer
 import joblib
-model = joblib.load('./new_model.joblib')
+import json, csv, pickle
+import os
 
+csv_file_path = './data.csv'
+pickle_file_path = "./index.pkl"  # Path to save the Pickle file
+
+# Load index from Pickle or build from CSV if not found
+if os.path.exists(pickle_file_path):
+    with open(pickle_file_path, 'rb') as pickle_file:
+        index = pickle.load(pickle_file)
+    print("Index loaded from Pickle file.")
+else:
+    index = {}
+    if os.path.exists(csv_file_path):
+        with open(csv_file_path, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                try:
+                    key = tuple(map(int, (row['Dfirst'], row['Cfirst'], row['Csecond'], row['Dsecond'])))
+                    index[key] = int(row['rank'])
+                except ValueError as e:
+                    print(f"Skipping invalid row: {row} (Error: {e})")
+        with open(pickle_file_path, 'wb') as pickle_file:
+            pickle.dump(index, pickle_file)
+        print("Index built from CSV and saved to Pickle file.")
+    else:
+        raise FileNotFoundError(f"CSV file at {csv_file_path} not found.")
+
+# Predict rank rank based on the index
+def predict_rank(Dfirst, Cfirst, Csecond, Dsecond):
+    return index.get((Dfirst, Cfirst, Csecond, Dsecond), "No matching data found")
 
 class FriendRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -43,7 +72,11 @@ class FriendRequestAPIView(APIView):
             friend_serializer = UserProfileSerializer(friend)
             friend_name = friend_serializer.data['name']
 
-            result = model.predict([[d_first, c_first, friend_serializer.data['C_second'], friend_serializer.data['D_second']]])
+            
+            
+            # result = model.predict([[d_first, c_first, friend_serializer.data['C_second'], friend_serializer.data['D_second']]])
+            result = predict_rank(logged_in_serializer.data['C_second'], logged_in_serializer.data['D_second'], friend_serializer.data['C_second'], friend_serializer.data['D_second'])
+            
             #rank end
             serializer.validated_data['rank'] = result
 
@@ -56,7 +89,7 @@ class FriendRequestAPIView(APIView):
                 'message': f"Friend request has been sent successfully to {receiver_name}",
                 'friend_request_id': friend_request.id,
                 'receiver': receiver.id,
-                # 'rank': serializer.data['rank']
+                'rank': serializer.data['rank']
             }, status=status.HTTP_201_CREATED)
         else:
             errors = serializer.errors
@@ -193,7 +226,7 @@ class ViewAllFriendRequestAPIView(APIView):
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,
-                        # 'rank': friend.rank,
+                        'rank': friend.rank,
                         'created_at': friend.created_at
                     })
         
@@ -243,7 +276,7 @@ class FriendAPIView(APIView):
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,
-                        # 'rank': friend.rank,
+                        'rank': friend.rank,
                         'created_at': friend.created_at
                     })
 
