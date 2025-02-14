@@ -71,7 +71,8 @@ class AllUserInfoWithFriendStatus(APIView):
 
         result.append({
             'id': logged_in_user.id, 'ProfileName': logged_in_profile['name'],'gender':logged_in_profile['gender'],'date_of_birth':logged_in_profile['date_of_birth'],
-            'image': logged_in_profile['file'], 'rank': 'Self'
+            'image': logged_in_profile['file'],
+            # 'rank': 'Self'
         })
         return JsonResponse(result, safe=False)
 
@@ -100,7 +101,7 @@ class UserByIdInfoWithFriendStatus(APIView):
             'friend_status': get_friend_status(logged_in_user, target_user.id)
         }
 
-        if logged_in_user.id == target_user.id:
-            result['rank'] = 'Self'
+        # if logged_in_user.id == target_user.id:
+        #     result['rank'] = 'Self'
 
         return JsonResponse([result], safe=False)

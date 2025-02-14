@@ -56,7 +56,7 @@ class FriendRequestAPIView(APIView):
                 'message': f"Friend request has been sent successfully to {receiver_name}",
                 'friend_request_id': friend_request.id,
                 'receiver': receiver.id,
-                'rank': serializer.data['rank']
+                # 'rank': serializer.data['rank']
             }, status=status.HTTP_201_CREATED)
         else:
             errors = serializer.errors
@@ -193,7 +193,7 @@ class ViewAllFriendRequestAPIView(APIView):
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,
-                        'rank': friend.rank,
+                        # 'rank': friend.rank,
                         'created_at': friend.created_at
                     })
         
@@ -243,7 +243,7 @@ class FriendAPIView(APIView):
                         'name': sender['name'],
                         'image': sender['file'],
                         'status': friend.status,
-                        'rank': friend.rank,
+                        # 'rank': friend.rank,
                         'created_at': friend.created_at
                     })
 
