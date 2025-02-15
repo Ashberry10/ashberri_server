@@ -4,8 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 env
-data.csv
-index.pkl
+.data.csv
+.index.pkl
 .env
 .profile_photo
 # User-specific files
