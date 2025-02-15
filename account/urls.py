@@ -1,4 +1,4 @@
-from account.modelapiview import AllUserInfoWithFriendStatus,UserByIdInfoWithFriendStatus
+from account.userinfowithfriendstatus import AllUserInfoWithFriendStatus,UserByIdInfoWithFriendStatus
 from account.views import GetAllUser, UpdateUser,UserProfileView , UserDeleteView, UserLoginView,UserRegistrationView
 from django.urls import path,include
 

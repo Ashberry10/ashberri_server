@@ -12,14 +12,9 @@ from django.http import HttpResponse
 from rest_framework_simplejwt.tokens import RefreshToken
 from account.renderers import UserRenderer
 from rest_framework.permissions import IsAuthenticated
-# import firebase_admin
-# from firebase_admin import storage
-# from firebase_admin import credentials
-import joblib  # from django_filters.rest_framework import DjangoFilterBackend
 from friend.models import FriendShip  # from rest_framework import generics
 
 # from rest_framework import filters
-model = joblib.load('./new_model.joblib')
 
 # Generate Token Manually
 
