@@ -16,7 +16,7 @@ env
 data.csv
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-index.pkl
+
 # Mono auto generated files
 mono_crash.*
 
