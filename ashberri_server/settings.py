@@ -98,6 +98,7 @@ AUTH_USER_MODEL = 'account.User'
 #     }
 # }
 
+# for postgresql db
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -109,7 +110,7 @@ DATABASES = {
     }
 }
 
-
+# for sqlite3 db
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
