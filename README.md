@@ -27,7 +27,7 @@
 
 
 <!-- 11-2-25
-latest code 
+latest running process
 source env/bin/activate
 env\Scripts\activate 
 pip install -r requirements.txt
